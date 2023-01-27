@@ -1,4 +1,4 @@
-# DSCI 310 Group 02
+# DSCI 310 PROJECT
 
 ## MEMBERS
 - Kashish Joshipura
@@ -7,4 +7,5 @@
 - So Nakamura
 
 ## CONTENTS
-- [Teamwork Contract](DCSI310_T2_Team Contract.pdf)
+- [Teamwork Contract](Teamwork_Contract.pdf)
+
