@@ -8,3 +8,4 @@ RUN conda install --yes -c conda-forge\
     pytest=7.0.1 \ 
     statsmodels=0.13.2 \
     jupyter-book=0.12.1
+    
