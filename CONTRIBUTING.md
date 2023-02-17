@@ -9,10 +9,9 @@ These are mostly just guidelines, not rules. Feel free to propose changes to thi
 
 ## Code of Conduct
 This project and everyone participating in it is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).   
-By participating, you are expected to uphold this code. Please report unacceptable behavior to [dsci-310-group-02@github.com](mailto:dsci-310-group-02@github.com).  
 
 ## How Can I Contribute?
-This section guides you through how to contribute as a direct or external partner. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.  
+This section guides you through how to contribute as a internal or external partner. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.  
 Contributions and bug reports are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create an issue [Here](https://github.com/kashish1928/dsci-310-group-02/issues).  
 
 If you are creating a bug report, please include as many details as possible: 
@@ -23,3 +22,12 @@ If you are creating a bug report, please include as many details as possible:
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.  
 * **Explain which behavior you expected to see instead and why.**  
 * **Include details about your configuration and environment**  
+
+#### Internal contributors  
+* Use issues to list and assgin the tasks that need accomplishment, and issues should be linkled to project milestone.
+* Pull at the beginning of each work session, and **commit(messages should be meaningful)** and push at the end.
+* Follow the [GitHub flow workflow](https://docs.github.com/en/get-started/quickstart/github-flow), which means creating branches for each feature or fix, and they should be reviewed by at least one other teammate.  
+
+#### External contributors  
+* External contributors need [open issues](https://github.com/kashish1928/dsci-310-group-02/issues) first to explain how they'd like to help.  
+* Once accepted, they should fork the repo and submit a pull request. All contribution must follow our [Code of Conduct](CODE_OF_CONDUCT.md).
