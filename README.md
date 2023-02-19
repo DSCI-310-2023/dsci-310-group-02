@@ -22,9 +22,8 @@ Then run the following in your terminal:
 ```
 docker run --rm \
   -p 8888:8888 \
-  -v /$(pwd):/opt/white_analysis \
-  kashish1928/white_analysis:v0.1.0 \
-  jupyter nbconvert --to notebook --execute dsci-310-group-02/white_analysis.ipynb
+  -v /$(pwd):/opt/dsci-310-group-02 \
+  kashish1909/dsci-310-group-02
 ```
 
 ### 2. Reproducibly excute the project non-interactively
