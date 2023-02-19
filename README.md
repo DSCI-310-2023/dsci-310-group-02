@@ -14,9 +14,23 @@ The data set used in this project is 12 characteristics of the Portuguese "Vinho
 The analysis file can be found [here](white_analysis.ipynb).
 
 ## Run
-We use the Docker container to make the computational environment for this project reproducilbe. There are two ways to run this project as following.  
+We use the Docker container to make the computational environment for this project reproducilbe. There are two ways to run this project as following.
+
 ### 1. Reproducibly excute the project non-interactively
-First, clone this GitHub repository and in the terminal, navigate to the root of this project.
+First, clone this GitHub repository by pasting the following block in the terminal.
+
+```
+https://github.com/kashish1928/dsci-310-group-02.git
+```
+
+and then in the terminal, navigate to the root of this project.
+
+Next pull the docker image (make sure you have docker desktop open when using any docker commands on the terminal) using:
+
+```
+docker pull kashish1909/dsci-310-group-02:latest
+```
+
 Then run the following in your terminal:
 
 ```
@@ -39,7 +53,15 @@ docker run --rm \
 - When done working, type `docker-compose down` to remove the dangling container.
 
 ## Dependencies
-R version 4.1.1, Jupyter and R packages listed in [white_analysis.ipynb](white_analysis.ipynb).
+
+| Package Name | Version |
+|--------------|---------|
+| Python | 3.9.10 |
+| R | 4.1.1 |
+| tidyverse | 1.3.1 |
+| tidymodels | 0.1.4 |
+
+Jupyter and R packages listed in [white_analysis.ipynb](white_analysis.ipynb).
 
 ## License Information
 The software provided in this project is offered under the [MIT open source license](https://opensource.org/licenses/MIT). See [LICENSE.md](LICENSE.md) for more information. 
