@@ -1,58 +1,53 @@
-# Classifying White Wine Based on Data from Physicochemical Tests 
 
-## MEMBERS
-- Kashish Joshipura
-- Peter Lee
-- Eric Huang
+# Classifying White Wine Based on Data from Physicochemical Tests  
+## MEMBERS  
+- Kashish Joshipura  
+- Peter Lee  
+- Eric Huang  
+## About  
+In this project, we attempt to build a classification model using the k-nearest neighbour algorithm to classify the wine only based on the physicochemical variable. This model can help the wine rating association or connoisseur understand the relationship between physicochemical and sensory factors better and thus determine the rating of the wine more accurately or more objectively.
 
-## About
-In this project, we attempt to build a classification model using the k-nearest neighbor algorithm to classify the wine only based on the physicochemical variable. This model can help the wine rating association or connoisseur understand the relationship between physicochemical and sensory factors better, and thus determine the rate of the wine more accurately or more objectively.  
-<br>
-The data set used in this project is 12 characteristics of the Portuguese "Vinho Verde" wine collected during Oct., 2009 from [Wine Quality Data Set](https://archive.ics.uci.edu/ml/datasets/wine+quality).
+The data set used in this project is made up of 12 characteristics of the Portuguese "Vinho Verde" wine collected during October 2009 from the Wine Quality Data Set.
 
-## Report
-The analysis file can be found [here](white_analysis.ipynb).
+## Report  
+The analysis file can be found [here](white_analysis.ipynb)
 
-## Run
-We use the Docker container to make the computational environment for this project reproducilbe. There are two ways to run this project as following.
+## Run  
+We use the Docker container to make the computational environment for this project reproducible. There are two ways to run this project, as follows:
 
-### 1. Reproducibly excute the project non-interactively
-First, clone this GitHub repository by pasting the following block in the terminal.
-
+### 1. Reproducibly execute the project non-interactively.  
+First, clone this GitHub repository by pasting the following block into the terminal.
 ```
-https://github.com/kashish1928/dsci-310-group-02.git
+https://github.com/kashish1928/dsci-310-group-02.git  
 ```
+and then, in the terminal, navigate to the root of this project.
 
-and then in the terminal, navigate to the root of this project.
-
-Next pull the docker image (make sure you have docker desktop open when using any docker commands on the terminal) using:
-
+Next, pull the Docker image (make sure you have Docker Desktop open when using any Docker commands on the terminal) using:
 ```
-docker pull kashish1909/dsci-310-group-02:latest
+docker pull kashish1909/dsci-310-group-02:latest  
 ```
-
 Then run the following in your terminal:
-
 ```
-docker run --rm \
-  -p 8888:8888 \
-  -v /$(pwd):/opt/dsci-310-group-02 \
-  kashish1909/dsci-310-group-02
+docker run --rm \  
+-p 8888:8888 \  
+-v /$(pwd):/opt/dsci-310-group-02 \  
+kashish1909/dsci-310-group-02  
 ```
+### 2. Reproducibly execute the project non-interactively.  
+In the terminal, navigate to the root of this project repository.
 
-### 2. Reproducibly excute the project non-interactively
+Type the following in the terminal:
+```
+docker-compose up -d  
+```
+- Once the container has launched, users need to copy the URL that looks like http://127.0.0.1:8888/lab?token=... into their web browser to access Jupyter Lab.
 
-- In terminal, navigate to the root of this project repository
-- Type the following in terminal:
+- Next, in Jupyter Lab, navigate to, and open white_analysis.ipynb and click Kernel > Restart and runall to run the entire analysis.
 
-  ```
-  docker-compose up -d
-  ```
-- Once the container has launched, users need to copy the URL that looks like `http://127.0.0.1:8888/lab?token=...` into their web browser to access Jupyter Lab
-- Next, in Jupyter lab, navigate to, and open `white_analysis.ipynb` and click **Kernel** > **Restart and runall** to run the entire analysis.
-- When done working, type `docker-compose down` to remove the dangling container.
+- When done working, type docker-compose down to remove the dangling container.
 
-## Dependencies
+## Dependencies  
+
 
 | Package Name | Version |
 |--------------|---------|
@@ -61,8 +56,5 @@ docker run --rm \
 | tidyverse | 1.3.1 |
 | tidymodels | 0.1.4 |
 
-Jupyter and R packages listed in [white_analysis.ipynb](white_analysis.ipynb).
-
-## License Information
-The software provided in this project is offered under the [MIT open source license](https://opensource.org/licenses/MIT). See [LICENSE.md](LICENSE.md) for more information. 
-
+## License Information  
+The software provided in this project is offered under the MIT open source license. See LICENSE.md for more information.
