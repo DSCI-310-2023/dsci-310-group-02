@@ -55,6 +55,7 @@ docker-compose up -d
 | R | 4.1.1 |
 | tidyverse | 1.3.1 |
 | tidymodels | 0.1.4 |
+| testthat| 3.1.6
 
 ## License Information  
 The software provided in this project is offered under the MIT open source license. See LICENSE.md for more information.
