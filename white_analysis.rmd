@@ -1,0 +1,717 @@
+---
+jupyter:
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir
+  language_info:
+    codemirror_mode: r
+    file_extension: .r
+    mimetype: text/x-r-source
+    name: R
+    pygments_lexer: r
+    version: 4.2.2
+  nbformat: 4
+  nbformat_minor: 5
+---
+
+::: {#a46479c0 .cell .markdown}
+# Using KNN regression to predict the Quality of White Wine
+:::
+
+::: {#10f3d63b .cell .markdown}
+Authors: Peter Lee, Kashish Joshipura, Eric Huang
+:::
+
+::: {#435a5837-d410-4a74-a0db-91b9c5095c7a .cell .markdown}
+## Loading in the required libraries used for classification of the data
+:::
+
+::: {#e81d48ae-a78a-4a49-9468-4b30533d5bee .cell .code execution_count="52" vscode="{\"languageId\":\"r\"}"}
+``` R
+library(tidyverse)
+library(repr)
+library(tidymodels)
+library(kknn)
+
+library("ggplot2")                     
+library("GGally")
+source("../dsci-310-group-02/R/data_summary.R")
+source("../dsci-310-group-02/R/splitdata.R")
+```
+:::
+
+::: {#1f5ba77c .cell .markdown}
+## Introduction
+:::
+
+::: {#9ba2c70e .cell .markdown}
+In this project, we attempt to build a classification model using the
+k-nearest neighbor algorithm to classify and predict white wine. This
+model can help the wine rating association or connoisseur understand the
+relationship between each variable such as acidity, density and etc.
+Therefore, they are able to determine the quality of wine more
+accurately or less objectively. While the average wine enjoyer wouldn\'t
+know much about wine other than it is made from grapes and fermented.
+Therefore our group decided to dig deeper into the production of wine
+and how each factor contributes to its quality. In this project we would
+like to see which factors plays the most significant role in terms of
+wine quality and how significant they are. By using k-nearest neighbor
+we are able to group each variables to test each of their correlation
+with the quality itself. We will also be using cross validation to
+confirm our prediction results with our training data to verify the
+authenticity of our model. We hope that this project is able to help you
+get a better insight our your \"average\" wine that you are drinking.
+The dataset that we will be using for this analysis is 12
+characteristics of the Portuguese \"Vinho Verde\" wine collected during
+Oct., 2009 from [Wine Quality Data
+Set](https://archive.ics.uci.edu/ml/datasets/wine+quality). This data
+consists of all chemical factors that makes up a wine such as pH,
+alcohol percentage, density, sulfur dioxide and etc.
+
+The question that the project wants to answer is How does each factor
+affect the overall wine quality?
+:::
+
+::: {#ad03f892 .cell .markdown}
+## Method
+:::
+
+::: {#57924fcc-94ae-42fa-9a03-1b0ac5a6aa42 .cell .markdown}
+### Reading in the white wine dataset from Jupyter
+:::
+
+::: {#f0b57c4b-29a2-4ccb-98c9-64298ba50ad4 .cell .code execution_count="27" vscode="{\"languageId\":\"r\"}"}
+``` R
+url <- "https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/winequality-white.csv"
+data = read_delim(url, ";")
+head(data)
+```
+
+::: {.output .stream .stderr}
+    Rows: 4898 Columns: 12
+    -- Column specification --------------------------------------------------------
+    Delimiter: ";"
+    dbl (12): fixed acidity, volatile acidity, citric acid, residual sugar, chlo...
+
+    i Use `spec()` to retrieve the full column specification for this data.
+    i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+:::
+
+::: {.output .display_data}
+
+A tibble: 6 × 12
+
+| fixed acidity &lt;dbl&gt; | volatile acidity &lt;dbl&gt; | citric acid &lt;dbl&gt; | residual sugar &lt;dbl&gt; | chlorides &lt;dbl&gt; | free sulfur dioxide &lt;dbl&gt; | total sulfur dioxide &lt;dbl&gt; | density &lt;dbl&gt; | pH &lt;dbl&gt; | sulphates &lt;dbl&gt; | alcohol &lt;dbl&gt; | quality &lt;dbl&gt; |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 7.0 | 0.27 | 0.36 | 20.7 | 0.045 | 45 | 170 | 1.0010 | 3.00 | 0.45 |  8.8 | 6 |
+| 6.3 | 0.30 | 0.34 |  1.6 | 0.049 | 14 | 132 | 0.9940 | 3.30 | 0.49 |  9.5 | 6 |
+| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | 6 |
+| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | 6 |
+| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | 6 |
+| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | 6 |
+:::
+:::
+
+::: {#8f1aa950-e8b5-4cee-81ad-86dfd91e6b0c .cell .markdown}
+### Cleaning the data
+
+Data cleaning was performed as following steps:
+
+1.  Changing the column names so they don\'t have spaces in between them
+    `<br>`{=html}
+2.  Labelling the white wine quality as categorical values and setting
+    them as a factor for the dataset`<br>`{=html}
+3.  Set each column as a double expect quality column
+:::
+
+::: {#d0a4e762-7df6-4285-a4f0-29cc3ca20cc8 .cell .code execution_count="28" vscode="{\"languageId\":\"r\"}"}
+``` R
+new_names <- c("fixed_acidity", "volatile_acidity", "citric_acid", "residual_sugar", "chlorides", "free_sulfur_dioxide", "total_sulfur_dioxide", "density", "pH", "sulphates", "alcohol", "quality")
+data <- rename(data, !!!setNames(names(data), new_names))
+
+# colnames(data)
+data$quality <- as.integer(data$quality)
+data$fixed_acidity<- as.double(data$fixed_acidity)
+data$volatile_acidity<- as.double(data$volatile_acidity)
+data$citric_acid<- as.double(data$citric_acid)
+data$residual_sugar<- as.double(data$residual_sugar)
+data$free_sulfur_dioxide<- as.double(data$free_sulfur_dioxide)
+data$total_sulfur_dioxide<- as.double(data$total_sulfur_dioxide)
+data$chlorides<- as.double(data$chlorides)
+data$density<- as.double(data$density)
+data$pH<- as.double(data$pH)
+data$sulphates<- as.double(data$sulphates)
+data$alcohol<- as.double(data$alcohol)
+data$quality[data$quality==1] = "unsatisfactory"
+data$quality[data$quality==2] = "unsatisfactory"
+data$quality[data$quality==3] = "unsatisfactory"
+data$quality[data$quality==4] = "unsatisfactory"
+data$quality[data$quality==5] = "average"
+data$quality[data$quality==6] = "average"
+data$quality[data$quality==7] = "Great"
+data$quality[data$quality==8] = "Great"
+data$quality[data$quality==9] = "Great"
+data$quality = as.factor(data$quality)
+table(data$quality)
+head(data)
+```
+
+::: {.output .display_data}
+
+             Great        average unsatisfactory 
+              1060           3655            183 
+:::
+
+::: {.output .display_data}
+
+A tibble: 6 × 12
+
+| fixed_acidity &lt;dbl&gt; | volatile_acidity &lt;dbl&gt; | citric_acid &lt;dbl&gt; | residual_sugar &lt;dbl&gt; | chlorides &lt;dbl&gt; | free_sulfur_dioxide &lt;dbl&gt; | total_sulfur_dioxide &lt;dbl&gt; | density &lt;dbl&gt; | pH &lt;dbl&gt; | sulphates &lt;dbl&gt; | alcohol &lt;dbl&gt; | quality &lt;fct&gt; |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 7.0 | 0.27 | 0.36 | 20.7 | 0.045 | 45 | 170 | 1.0010 | 3.00 | 0.45 |  8.8 | average |
+| 6.3 | 0.30 | 0.34 |  1.6 | 0.049 | 14 | 132 | 0.9940 | 3.30 | 0.49 |  9.5 | average |
+| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | average |
+| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | average |
+| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | average |
+| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | average |
+:::
+:::
+
+::: {#4ca8f4be .cell .markdown}
+## Analysis
+:::
+
+::: {#686c2873 .cell .markdown}
+### Summary of the Data
+:::
+
+::: {#307a42f4 .cell .code execution_count="45" vscode="{\"languageId\":\"r\"}"}
+``` R
+alcohol_summary <- data_summary(url,"alcohol")
+alcohol_summary
+```
+
+::: {.output .stream .stderr}
+    Rows: 4898 Columns: 12
+    -- Column specification --------------------------------------------------------
+    Delimiter: ";"
+    dbl (12): fixed acidity, volatile acidity, citric acid, residual sugar, chlo...
+
+    i Use `spec()` to retrieve the full column specification for this data.
+    i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+:::
+
+::: {.output .display_data}
+
+A tibble: 1 × 3
+
+| mean &lt;dbl&gt; | median &lt;dbl&gt; | standard_deviation &lt;dbl&gt; |
+|---|---|---|
+| 10.51427 | 10.4 | 1.230621 |
+:::
+:::
+
+::: {#847d6f59 .cell .code execution_count="30" vscode="{\"languageId\":\"r\"}"}
+``` R
+sulphates_summary <- data_summary(url,"sulphates")
+sulphates_summary
+```
+
+::: {.output .stream .stderr}
+    Rows: 4898 Columns: 12
+    -- Column specification --------------------------------------------------------
+    Delimiter: ";"
+    dbl (12): fixed acidity, volatile acidity, citric acid, residual sugar, chlo...
+
+    i Use `spec()` to retrieve the full column specification for this data.
+    i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+:::
+
+::: {.output .display_data}
+
+A tibble: 1 × 3
+
+| mean &lt;dbl&gt; | median &lt;dbl&gt; | standard_deviation &lt;dbl&gt; |
+|---|---|---|
+| 0.4898469 | 0.47 | 0.1141258 |
+:::
+:::
+
+::: {#53dd1b47 .cell .code execution_count="31" vscode="{\"languageId\":\"r\"}"}
+``` R
+chlorides_summary <- data_summary(url,"chlorides")
+chlorides_summary
+```
+
+::: {.output .stream .stderr}
+    Rows: 4898 Columns: 12
+    -- Column specification --------------------------------------------------------
+    Delimiter: ";"
+    dbl (12): fixed acidity, volatile acidity, citric acid, residual sugar, chlo...
+
+    i Use `spec()` to retrieve the full column specification for this data.
+    i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+:::
+
+::: {.output .display_data}
+
+A tibble: 1 × 3
+
+| mean &lt;dbl&gt; | median &lt;dbl&gt; | standard_deviation &lt;dbl&gt; |
+|---|---|---|
+| 0.04577236 | 0.043 | 0.02184797 |
+:::
+:::
+
+::: {#0c96dbab-b174-4a95-99a8-ccef0d7f8600 .cell .markdown}
+### Counting and graphinh all the different quality of wines
+:::
+
+::: {#b0089f8b-ba49-4920-9b80-874cfbfe0581 .cell .code execution_count="32" vscode="{\"languageId\":\"r\"}"}
+``` R
+options(repr.plot.width = 12, repr.plot.height = 8)
+data %>%
+  group_by(quality) %>%
+  tally()
+
+quality_distribution <- data %>% 
+    ggplot(aes(x = quality, fill = quality)) +
+    geom_bar() +
+    labs(x = "Wine Wine Quality", y = "Number of Occurances", fill = "Wine Category") +
+    ggtitle("Total Count of White Wine Quality")
+quality_distribution
+```
+
+::: {.output .display_data}
+
+A tibble: 3 × 2
+
+| quality &lt;fct&gt; | n &lt;int&gt; |
+|---|---|
+| Great          | 1060 |
+| average        | 3655 |
+| unsatisfactory |  183 |
+:::
+
+::: {.output .display_data}
+![](vertopal_7bd2dc38b9eb4b2a80d710e768597a4e/6d57fbab6c8127f1e7bff97f14772f6fa28cd461.png){height="480"
+width="720"}
+:::
+:::
+
+::: {#dc3586db .cell .markdown}
+**Table.1. & Figure. 1. Total Count of White Wine Quality**
+:::
+
+::: {#8a19af98-76e6-47fb-b647-b241e696985d .cell .markdown}
+### Looking at the correlation between all predictors and the predicted
+:::
+
+::: {#4186dd9a-5ff5-4f11-95f9-9d968faafdc7 .cell .code execution_count="33" vscode="{\"languageId\":\"r\"}"}
+``` R
+ggpairs(data)
+```
+
+::: {.output .stream .stderr}
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+:::
+
+::: {.output .display_data}
+![](vertopal_7bd2dc38b9eb4b2a80d710e768597a4e/90bb544226eaecbdb5a153fd559ea4b99b49d0c7.png){height="480"
+width="720"}
+:::
+:::
+
+::: {#d22b534a .cell .markdown}
+**Figure.2. Correlation between predictor variables and response
+variable**
+:::
+
+::: {#638b32d1-ddff-4d08-b0a2-832d02666755 .cell .markdown}
+### Splitting a training and testing data set and creating a recipe for it
+:::
+
+::: {#63f4a91a-1af6-4a98-ab39-1b57b5218632 .cell .code execution_count="34" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+
+
+#training
+training_data <- splitdata(url)
+
+
+# testing data
+split <- initial_split(data, prop = 0.75, strata = quality)
+testing <- testing(split)
+
+
+head(training_data)
+```
+
+::: {.output .stream .stderr}
+    Rows: 4898 Columns: 12
+    -- Column specification --------------------------------------------------------
+    Delimiter: ";"
+    dbl (12): fixed acidity, volatile acidity, citric acid, residual sugar, chlo...
+
+    i Use `spec()` to retrieve the full column specification for this data.
+    i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+:::
+
+::: {.output .display_data}
+
+A tibble: 6 × 12
+
+| fixed acidity &lt;dbl&gt; | volatile acidity &lt;dbl&gt; | citric acid &lt;dbl&gt; | residual sugar &lt;dbl&gt; | chlorides &lt;dbl&gt; | free sulfur dioxide &lt;dbl&gt; | total sulfur dioxide &lt;dbl&gt; | density &lt;dbl&gt; | pH &lt;dbl&gt; | sulphates &lt;dbl&gt; | alcohol &lt;dbl&gt; | quality &lt;dbl&gt; |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8.1 | 0.27 | 0.41 |  1.45 | 0.033 | 11 |  63 | 0.9908 | 2.99 | 0.56 | 12.0 | 5 |
+| 8.6 | 0.23 | 0.40 |  4.20 | 0.035 | 17 | 109 | 0.9947 | 3.14 | 0.53 |  9.7 | 5 |
+| 8.3 | 0.42 | 0.62 | 19.25 | 0.040 | 41 | 172 | 1.0002 | 2.98 | 0.67 |  9.7 | 5 |
+| 6.5 | 0.31 | 0.14 |  7.50 | 0.044 | 34 | 133 | 0.9955 | 3.22 | 0.50 |  9.5 | 5 |
+| 7.6 | 0.67 | 0.14 |  1.50 | 0.074 | 25 | 168 | 0.9937 | 3.05 | 0.51 |  9.3 | 5 |
+| 7.3 | 0.28 | 0.43 |  1.70 | 0.080 | 21 | 123 | 0.9905 | 3.19 | 0.42 | 12.8 | 5 |
+:::
+:::
+
+::: {#8b17cf7f-51bc-4580-8b7f-7cd35c1e5e17 .cell .code execution_count="35" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+recipe <- recipe(quality ~ . , data = data)%>%
+    step_center(all_predictors()) %>%
+    step_scale(all_predictors())
+recipe
+     
+```
+
+::: {.output .display_data}
+    Recipe
+
+    Inputs:
+
+          role #variables
+       outcome          1
+     predictor         11
+
+    Operations:
+
+    Centering for all_predictors()
+    Scaling for all_predictors()
+:::
+:::
+
+::: {#dccccf26-bb98-4bb5-a607-b9d520983bcb .cell .markdown}
+### Making a 10-fold cross validation for wine quality training data set
+:::
+
+::: {#e72d6ff4-d507-49e0-9979-e3458a7e7362 .cell .code execution_count="36" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+
+vfold <- vfold_cv(data, v = 10, strata = quality)
+knn_tune <- nearest_neighbor(weight_func = "rectangular", neighbors = tune()) %>%
+    set_engine("kknn") %>%
+    set_mode("classification")
+knn_tune
+```
+
+::: {.output .display_data}
+    K-Nearest Neighbor Model Specification (classification)
+
+    Main Arguments:
+      neighbors = tune()
+      weight_func = rectangular
+
+    Computational engine: kknn 
+:::
+:::
+
+::: {#c46d8520-4636-4318-89e7-6abd5e90a817 .cell .markdown}
+### Setting up the workflow for the recipe and knn fold
+:::
+
+::: {#eff33a6c-0371-48dd-8705-7a81eb578ffe .cell .code execution_count="37" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+knn_results <- workflow() %>%
+    add_recipe(recipe) %>%
+    add_model(knn_tune) %>%
+    tune_grid(resamples = vfold, grid = 20) %>%
+    collect_metrics()
+knn_results 
+```
+
+::: {.output .display_data}
+
+A tibble: 26 × 7
+
+| neighbors &lt;int&gt; | .metric &lt;chr&gt; | .estimator &lt;chr&gt; | mean &lt;dbl&gt; | n &lt;int&gt; | std_err &lt;dbl&gt; | .config &lt;chr&gt; |
+|---|---|---|---|---|---|---|
+|  1 | accuracy | multiclass | 0.8231849 | 10 | 0.005102368 | Preprocessor1_Model01 |
+|  1 | roc_auc  | hand_till  | 0.7211623 | 10 | 0.007749102 | Preprocessor1_Model01 |
+|  2 | accuracy | multiclass | 0.8231849 | 10 | 0.005102368 | Preprocessor1_Model02 |
+|  2 | roc_auc  | hand_till  | 0.7449759 | 10 | 0.008806168 | Preprocessor1_Model02 |
+|  3 | accuracy | multiclass | 0.7876571 | 10 | 0.003926096 | Preprocessor1_Model03 |
+|  3 | roc_auc  | hand_till  | 0.7661830 | 10 | 0.011233926 | Preprocessor1_Model03 |
+|  4 | accuracy | multiclass | 0.7870440 | 10 | 0.003661544 | Preprocessor1_Model04 |
+|  4 | roc_auc  | hand_till  | 0.7711363 | 10 | 0.011628936 | Preprocessor1_Model04 |
+|  5 | accuracy | multiclass | 0.7925484 | 10 | 0.006052842 | Preprocessor1_Model05 |
+|  5 | roc_auc  | hand_till  | 0.7747168 | 10 | 0.011625419 | Preprocessor1_Model05 |
+|  6 | accuracy | multiclass | 0.7921407 | 10 | 0.006025019 | Preprocessor1_Model06 |
+|  6 | roc_auc  | hand_till  | 0.7791269 | 10 | 0.013014304 | Preprocessor1_Model06 |
+|  7 | accuracy | multiclass | 0.7931623 | 10 | 0.005691028 | Preprocessor1_Model07 |
+|  7 | roc_auc  | hand_till  | 0.7860600 | 10 | 0.012246006 | Preprocessor1_Model07 |
+|  8 | accuracy | multiclass | 0.7943889 | 10 | 0.005594349 | Preprocessor1_Model08 |
+|  8 | roc_auc  | hand_till  | 0.7830464 | 10 | 0.011654188 | Preprocessor1_Model08 |
+|  9 | accuracy | multiclass | 0.7913348 | 10 | 0.004603264 | Preprocessor1_Model09 |
+|  9 | roc_auc  | hand_till  | 0.7830950 | 10 | 0.011272634 | Preprocessor1_Model09 |
+| 11 | accuracy | multiclass | 0.7911344 | 10 | 0.005213681 | Preprocessor1_Model10 |
+| 11 | roc_auc  | hand_till  | 0.7885967 | 10 | 0.007801708 | Preprocessor1_Model10 |
+| 12 | accuracy | multiclass | 0.7899066 | 10 | 0.005744716 | Preprocessor1_Model11 |
+| 12 | roc_auc  | hand_till  | 0.7898406 | 10 | 0.008463019 | Preprocessor1_Model11 |
+| 14 | accuracy | multiclass | 0.7864339 | 10 | 0.005262338 | Preprocessor1_Model12 |
+| 14 | roc_auc  | hand_till  | 0.7930254 | 10 | 0.008834923 | Preprocessor1_Model12 |
+| 15 | accuracy | multiclass | 0.7874560 | 10 | 0.004296821 | Preprocessor1_Model13 |
+| 15 | roc_auc  | hand_till  | 0.7930571 | 10 | 0.008983637 | Preprocessor1_Model13 |
+:::
+:::
+
+::: {#4c62c8ee-5824-4ffd-84fe-558feaae51e0 .cell .markdown}
+### Graphing the accuray and the KNN
+:::
+
+::: {#967a47e8-72da-4fa4-b641-f68103d8b6b0 .cell .code execution_count="38" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+
+accuracies <- knn_results %>% 
+    filter(.metric == "accuracy")
+
+cross_plot <- ggplot(accuracies, aes(x = neighbors, y = mean))+
+    geom_point() +
+    geom_line() +
+    labs(x = "Neighbors", y = "Accuracy", title = "Accuracy Estimate vs KNN") + 
+    theme(text = element_text(size = 20)) 
+cross_plot
+```
+
+::: {.output .display_data}
+![](vertopal_7bd2dc38b9eb4b2a80d710e768597a4e/1a2e25a3cb492379152c5bcb84bfdbb770caa2a2.png){height="480"
+width="720"}
+:::
+:::
+
+::: {#6ade3166 .cell .markdown}
+**Figure.3. The relationship between accuracy and the number of
+neighbors**
+:::
+
+::: {#040f4f61-42af-4f23-93d2-f7f27d40e62c .cell .markdown}
+### Finding the most accurate K value
+:::
+
+::: {#c3e71b9d-4502-4207-92ae-f9f3f82a5aa6 .cell .code execution_count="39" vscode="{\"languageId\":\"r\"}"}
+``` R
+
+accurate_k <-  accuracies %>% filter(mean == max(mean)) %>% slice(1)
+accurate_k
+
+k <- accurate_k %>% pull(neighbors)
+k
+```
+
+::: {.output .display_data}
+
+A tibble: 1 × 7
+
+| neighbors &lt;int&gt; | .metric &lt;chr&gt; | .estimator &lt;chr&gt; | mean &lt;dbl&gt; | n &lt;int&gt; | std_err &lt;dbl&gt; | .config &lt;chr&gt; |
+|---|---|---|---|---|---|---|
+| 1 | accuracy | multiclass | 0.8231849 | 10 | 0.005102368 | Preprocessor1_Model01 |
+:::
+
+::: {.output .display_data}
+1
+:::
+:::
+
+::: {#72afbd6f .cell .markdown}
+**Table.2. The neighbor wiht the highest classification accuracy and its
+error on the test data**
+:::
+
+::: {#22ff4d55-1547-4f39-8af4-5f40551a3720 .cell .markdown}
+### Using the most accurate K value to then build our Classification Model
+:::
+
+::: {#a3b0973e-a4b2-4441-95b5-4e0f1f3863a1 .cell .code execution_count="40" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+
+spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k) %>%
+    set_engine("kknn") %>%
+    set_mode("classification")
+spec
+
+fit <- workflow() %>%
+    add_recipe(recipe) %>%
+    add_model(spec) %>%
+    fit(data = data)
+fit 
+```
+
+::: {.output .display_data}
+    K-Nearest Neighbor Model Specification (classification)
+
+    Main Arguments:
+      neighbors = k
+      weight_func = rectangular
+
+    Computational engine: kknn 
+:::
+
+::: {.output .display_data}
+    == Workflow [trained] ==========================================================
+    Preprocessor: Recipe
+    Model: nearest_neighbor()
+
+    -- Preprocessor ----------------------------------------------------------------
+    2 Recipe Steps
+
+    * step_center()
+    * step_scale()
+
+    -- Model -----------------------------------------------------------------------
+
+    Call:
+    kknn::train.kknn(formula = ..y ~ ., data = data, ks = min_rows(1L,     data, 5), kernel = ~"rectangular")
+
+    Type of response variable: nominal
+    Minimal misclassification: 0.1723152
+    Best kernel: rectangular
+    Best k: 1
+:::
+:::
+
+::: {#bd3edff1-9d59-42bb-b7ec-3b40e0052434 .cell .markdown}
+### Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix
+:::
+
+::: {#423e1f67-e87e-4bda-a6ac-4f351aa8d5b5 .cell .code execution_count="41" vscode="{\"languageId\":\"r\"}"}
+``` R
+set.seed(5678)
+
+prediction <- predict(fit, testing) %>%
+    bind_cols(testing) 
+# mnist_predictions
+
+mnist_metrics <- prediction %>%
+    metrics(truth = quality, estimate = .pred_class) 
+mnist_metrics
+
+conf_mat <- prediction %>%
+    conf_mat(truth = quality, estimate = .pred_class) 
+conf_mat
+```
+
+::: {.output .display_data}
+
+A tibble: 2 × 3
+
+| .metric &lt;chr&gt; | .estimator &lt;chr&gt; | .estimate &lt;dbl&gt; |
+|---|---|---|
+| accuracy | multiclass | 1 |
+| kap      | multiclass | 1 |
+:::
+
+::: {.output .display_data}
+                    Truth
+    Prediction       Great average unsatisfactory
+      Great            267       0              0
+      average            0     909              0
+      unsatisfactory     0       0             49
+:::
+:::
+
+::: {#72377c4d .cell .markdown}
+**Table.3. The classification confusion matrix with k = 1**
+:::
+
+::: {#484b9a9a-1218-4cce-b044-7a690311a674 .cell .markdown}
+# Results
+
+Data was split into 75% training and 25% testing sets. The relationship
+between predictor variables(physicochemical varialbe) and response
+variable listed in Figure 2 was visualitzed to evaluate the utility for
+modelling. The result showed that there was no evidence of having strong
+relationship between them was omitted from modeling. We first perform a
+10-fold cross validation test. We then created a workflow based on the
+cross validation and recipe that we made.\
+`<Br>`{=html} After using our KNN Classification, we figured out that
+our best k-neighbour would be 1 as the result shown in Figure 3 and
+Table 2. Then we use the best_k to predict our accuracy and present it
+through a confusion matrix in Table 3. We got that the estimate to be 1
+exactly. We also found that the standard error for our best k was very
+low: 0.00466. This means that our prediction was very accurate when
+testing our prediction data.
+:::
+
+::: {#f4766941-f402-4f8e-9892-4de7cef6288f .cell .markdown}
+# Discussion
+
+When we got the esitmate of 1 that means that our data was exactly
+correlated and no error was made between the prediction when we are
+training and testing the data. Some conclusions can we drawn from the
+estimate. Our original data maybe under sampled or flawed so thus when
+we are performing our classification we would get over repeated values
+and thus having no error when training our data. On the other hand, when
+we trained our data the seed of our data ran the exact operations needed
+to have the perfert perdict however this is extremely unlikely.
+Moreover, since we are including all of the predictors that are used in
+this data therefore creating such a high estiamte for the predciton
+because the more the predictors we use the higher the R\^2 and adjusted
+R\^2 we get from the values.
+:::
+
+::: {#7378e77e-9bf9-44c3-84ec-552bcba69ca4 .cell .markdown}
+# References
+:::
+
+::: {#a2dc400e-ccad-4b93-959a-4712b69f3bb2 .cell .markdown}
+Shin, T. (2021, December 14). Predicting Wine Quality with Several
+Classification Techniques. Medium.
+<https://towardsdatascience.com/predicting-wine-quality-with-several-classification-techniques-179038ea6434>
+`<br>`{=html} `<br>`{=html} McCarthy, E., & Ewing-Mulligan, M. (2019,
+January 30). Wine Quality How to Judge Good or Bad Wines. Dummies.
+<https://www.dummies.com/article/home-auto-hobbies/food-drink/beverages/wine/wine-quality-how-to-judge-good-or-bad-wines-259773/>
+`<br>`{=html} `<br>`{=html} McCarthy, S. Jackson, R. (2008). What
+constitutes wine quality. Science Direct.
+<https://www.sciencedirect.com/topics/food-science/wine-quality>
+`<br>`{=html} `<br>`{=html} Staff, U. T. (2020, March 11). 13 ways to
+judge the quality of a wine.
+<https://eu.usatoday.com/picture-gallery/life/2020/03/11/13-ways-to-tell-if-a-wine-is-actually-good/111412612/>
+:::
+
+::: {#3aa9200a-8891-4fc9-9f24-7f69f2721bf9 .cell .code vscode="{\"languageId\":\"r\"}"}
+``` R
+```
+:::
