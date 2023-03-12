@@ -41,6 +41,7 @@ library("ggplot2")
 library("GGally")
 source("../dsci-310-group-02/R/data_summary.R")
 source("../dsci-310-group-02/R/cleaning.R")
+source("../dsci-310-group-02/R/data_plot.R")
 source("../dsci-310-group-02/R/splitdata.R")
 ```
 :::
@@ -238,22 +239,13 @@ A tibble: 1 × 3
 :::
 
 ::: {#0c96dbab-b174-4a95-99a8-ccef0d7f8600 .cell .markdown}
-### Counting and graphinh all the different quality of wines
+### Counting and graphing all the different quality of wines
 :::
 
 ::: {#b0089f8b-ba49-4920-9b80-874cfbfe0581 .cell .code execution_count="32" vscode="{\"languageId\":\"r\"}"}
 ``` r
-options(repr.plot.width = 12, repr.plot.height = 8)
-data %>%
-  group_by(quality) %>%
-  tally()
-
-quality_distribution <- data %>% 
-    ggplot(aes(x = quality, fill = quality)) +
-    geom_bar() +
-    labs(x = "Wine Wine Quality", y = "Number of Occurances", fill = "Wine Category") +
-    ggtitle("Total Count of White Wine Quality")
-quality_distribution
+c_data_path <- "../data/cleaned_data.csv"
+count_plot(c_data_path)
 ```
 
 ::: {.output .display_data}
@@ -282,7 +274,7 @@ width="720"}
 
 ::: {#4186dd9a-5ff5-4f11-95f9-9d968faafdc7 .cell .code execution_count="33" vscode="{\"languageId\":\"r\"}"}
 ``` r
-ggpairs(data)
+ggpairs_plot(c_data_path)
 ```
 
 ::: {.output .stream .stderr}

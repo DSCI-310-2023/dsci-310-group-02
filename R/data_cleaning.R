@@ -51,4 +51,3 @@ data_cleaning <- function(file_path_url){
   write_csv(data, paste0("../data", "/cleaned_data.csv"))
   return(data)
 }
-
