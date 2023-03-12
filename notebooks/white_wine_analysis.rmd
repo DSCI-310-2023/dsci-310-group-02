@@ -20,7 +20,7 @@ Authors: Peter Lee, Kashish Joshipura, Eric Huang
 
 
 
-```{r}
+```r
 library(tidyverse)
 library(repr)
 library(tidymodels)
@@ -29,6 +29,7 @@ library(kknn)
 library("ggplot2")                     
 library("GGally")
 source("../dsci-310-group-02/R/data_summary.R")
+source("../dsci-310-group-02/R/cleaning.R")
 source("../dsci-310-group-02/R/splitdata.R")
 ```
 
@@ -43,7 +44,7 @@ k-nearest neighbor algorithm to classify and predict white wine. This
 model can help the wine rating association or connoisseur understand the
 relationship between each variable such as acidity, density and etc.
 Therefore, they are able to determine the quality of wine more
-accurately or less objectively. While the average wine enjoyer wouldn\'t
+accurately or less objectively. While the average wine enjoyer wouldn't
 know much about wine other than it is made from grapes and fermented.
 Therefore our group decided to dig deeper into the production of wine
 and how each factor contributes to its quality. In this project we would
@@ -53,13 +54,12 @@ we are able to group each variables to test each of their correlation
 with the quality itself. We will also be using cross validation to
 confirm our prediction results with our training data to verify the
 authenticity of our model. We hope that this project is able to help you
-get a better insight our your \"average\" wine that you are drinking.
-The dataset that we will be using for this analysis is 12
-characteristics of the Portuguese \"Vinho Verde\" wine collected during
-Oct., 2009 from [Wine Quality Data
-Set](https://archive.ics.uci.edu/ml/datasets/wine+quality). This data
-consists of all chemical factors that makes up a wine such as pH,
-alcohol percentage, density, sulfur dioxide and etc.
+get a better insight our your "average" wine that you are drinking. The
+dataset that we will be using for this analysis is 12 characteristics of
+the Portuguese "Vinho Verde" wine collected during Oct., 2009 from [Wine
+Quality Data Set](https://archive.ics.uci.edu/ml/datasets/wine+quality).
+This data consists of all chemical factors that makes up a wine such as
+pH, alcohol percentage, density, sulfur dioxide and etc.
 
 The question that the project wants to answer is How does each factor
 affect the overall wine quality?
@@ -72,53 +72,26 @@ affect the overall wine quality?
 
 ### Reading in the white wine dataset from Jupyter
 
-
 ``` r
 url <- "https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/winequality-white.csv"
 data = read_delim(url, ";")
 head(data)
 ```
 
-
 ### Cleaning the data
 
 Data cleaning was performed as following steps:
 
-1.  Changing the column names so they don\'t have spaces in between them
-    `<br>`{=html}
+1.  Changing the column names so they don't have spaces in between them
+    <br>
 2.  Labelling the white wine quality as categorical values and setting
-    them as a factor for the dataset`<br>`{=html}
+    them as a factor for the dataset<br>
 3.  Set each column as a double expect quality column
 
-
-
+::: {#d0a4e762-7df6-4285-a4f0-29cc3ca20cc8 .cell .code execution_count="28" vscode="{\"languageId\":\"r\"}"}
 ``` r
-new_names <- c("fixed_acidity", "volatile_acidity", "citric_acid", "residual_sugar", "chlorides", "free_sulfur_dioxide", "total_sulfur_dioxide", "density", "pH", "sulphates", "alcohol", "quality")
-data <- rename(data, !!!setNames(names(data), new_names))
+data <- data_cleaning(url)
 
-# colnames(data)
-data$quality <- as.integer(data$quality)
-data$fixed_acidity<- as.double(data$fixed_acidity)
-data$volatile_acidity<- as.double(data$volatile_acidity)
-data$citric_acid<- as.double(data$citric_acid)
-data$residual_sugar<- as.double(data$residual_sugar)
-data$free_sulfur_dioxide<- as.double(data$free_sulfur_dioxide)
-data$total_sulfur_dioxide<- as.double(data$total_sulfur_dioxide)
-data$chlorides<- as.double(data$chlorides)
-data$density<- as.double(data$density)
-data$pH<- as.double(data$pH)
-data$sulphates<- as.double(data$sulphates)
-data$alcohol<- as.double(data$alcohol)
-data$quality[data$quality==1] = "unsatisfactory"
-data$quality[data$quality==2] = "unsatisfactory"
-data$quality[data$quality==3] = "unsatisfactory"
-data$quality[data$quality==4] = "unsatisfactory"
-data$quality[data$quality==5] = "average"
-data$quality[data$quality==6] = "average"
-data$quality[data$quality==7] = "Great"
-data$quality[data$quality==8] = "Great"
-data$quality[data$quality==9] = "Great"
-data$quality = as.factor(data$quality)
 table(data$quality)
 head(data)
 ```
@@ -145,7 +118,6 @@ sulphates_summary
 chlorides_summary <- data_summary(url,"chlorides")
 chlorides_summary
 ```
-
 
 ### Counting and graphinh all the different quality of wines
 
@@ -191,7 +163,6 @@ testing <- testing(split)
 head(training_data)
 ```
 
-
 ``` r
 set.seed(5678)
 recipe <- recipe(quality ~ . , data = data)%>%
@@ -227,7 +198,6 @@ knn_results <- workflow() %>%
 knn_results 
 ```
 
-
 ### Graphing the accuray and the KNN
 
 ``` r
@@ -262,7 +232,6 @@ accurate_k
 k <- accurate_k %>% pull(neighbors)
 k
 ```
-
 
 **Table.2. The neighbor wiht the highest classification accuracy and its
 error on the test data**
@@ -317,13 +286,14 @@ modelling. The result showed that there was no evidence of having strong
 relationship between them was omitted from modeling. We first perform a
 10-fold cross validation test. We then created a workflow based on the
 cross validation and recipe that we made.\
-`<Br>`{=html} After using our KNN Classification, we figured out that
-our best k-neighbour would be 1 as the result shown in Figure 3 and
-Table 2. Then we use the best_k to predict our accuracy and present it
-through a confusion matrix in Table 3. We got that the estimate to be 1
-exactly. We also found that the standard error for our best k was very
-low: 0.00466. This means that our prediction was very accurate when
-testing our prediction data.
+<Br> After using our KNN Classification, we figured out that our best
+k-neighbour would be 1 as the result shown in Figure 3 and Table 2. Then
+we use the best_k to predict our accuracy and present it through a
+confusion matrix in Table 3. We got that the estimate to be 1 exactly.
+We also found that the standard error for our best k was very low:
+0.00466. This means that our prediction was very accurate when testing
+our prediction data.
+:::
 
 # Discussion
 
@@ -345,13 +315,13 @@ R\^2 we get from the values.
 Shin, T. (2021, December 14). Predicting Wine Quality with Several
 Classification Techniques. Medium.
 <https://towardsdatascience.com/predicting-wine-quality-with-several-classification-techniques-179038ea6434>
-`<br>`{=html} `<br>`{=html} McCarthy, E., & Ewing-Mulligan, M. (2019,
-January 30). Wine Quality How to Judge Good or Bad Wines. Dummies.
+<br> <br> McCarthy, E., & Ewing-Mulligan, M. (2019, January 30). Wine
+Quality How to Judge Good or Bad Wines. Dummies.
 <https://www.dummies.com/article/home-auto-hobbies/food-drink/beverages/wine/wine-quality-how-to-judge-good-or-bad-wines-259773/>
-`<br>`{=html} `<br>`{=html} McCarthy, S. Jackson, R. (2008). What
-constitutes wine quality. Science Direct.
-<https://www.sciencedirect.com/topics/food-science/wine-quality>
-`<br>`{=html} `<br>`{=html} Staff, U. T. (2020, March 11). 13 ways to
-judge the quality of a wine.
+<br> <br> McCarthy, S. Jackson, R. (2008). What constitutes wine
+quality. Science Direct.
+<https://www.sciencedirect.com/topics/food-science/wine-quality> <br>
+<br> Staff, U. T. (2020, March 11). 13 ways to judge the quality of a
+wine.
 <https://eu.usatoday.com/picture-gallery/life/2020/03/11/13-ways-to-tell-if-a-wine-is-actually-good/111412612/>
 

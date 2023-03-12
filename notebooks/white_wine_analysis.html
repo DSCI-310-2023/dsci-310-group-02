@@ -378,6 +378,7 @@ library(kknn)
 library(&quot;ggplot2&quot;)                     
 library(&quot;GGally&quot;)
 source(&quot;../dsci-310-group-02/R/data_summary.R&quot;)
+source(&quot;../dsci-310-group-02/R/cleaning.R&quot;)
 source(&quot;../dsci-310-group-02/R/splitdata.R&quot;)</code></pre>
 </div>
 <div id="introduction" class="section level2">
@@ -387,7 +388,7 @@ k-nearest neighbor algorithm to classify and predict white wine. This
 model can help the wine rating association or connoisseur understand the
 relationship between each variable such as acidity, density and etc.
 Therefore, they are able to determine the quality of wine more
-accurately or less objectively. While the average wine enjoyer wouldn&#39;t
+accurately or less objectively. While the average wine enjoyer wouldn’t
 know much about wine other than it is made from grapes and fermented.
 Therefore our group decided to dig deeper into the production of wine
 and how each factor contributes to its quality. In this project we would
@@ -397,9 +398,9 @@ we are able to group each variables to test each of their correlation
 with the quality itself. We will also be using cross validation to
 confirm our prediction results with our training data to verify the
 authenticity of our model. We hope that this project is able to help you
-get a better insight our your &quot;average&quot; wine that you are drinking. The
+get a better insight our your “average” wine that you are drinking. The
 dataset that we will be using for this analysis is 12 characteristics of
-the Portuguese &quot;Vinho Verde&quot; wine collected during Oct., 2009 from <a href="https://archive.ics.uci.edu/ml/datasets/wine+quality">Wine Quality
+the Portuguese “Vinho Verde” wine collected during Oct., 2009 from <a href="https://archive.ics.uci.edu/ml/datasets/wine+quality">Wine Quality
 Data Set</a>. This data consists of all chemical factors that makes up a
 wine such as pH, alcohol percentage, density, sulfur dioxide and
 etc.</p>
@@ -418,42 +419,17 @@ head(data)</code></pre>
 <h3>Cleaning the data</h3>
 <p>Data cleaning was performed as following steps:</p>
 <ol style="list-style-type: decimal">
-<li>Changing the column names so they don&#39;t have spaces in between them
+<li>Changing the column names so they don’t have spaces in between them
 <br></li>
 <li>Labelling the white wine quality as categorical values and setting
 them as a factor for the dataset<br></li>
 <li>Set each column as a double expect quality column</li>
 </ol>
-<pre class="r"><code>new_names &lt;- c(&quot;fixed_acidity&quot;, &quot;volatile_acidity&quot;, &quot;citric_acid&quot;, &quot;residual_sugar&quot;, &quot;chlorides&quot;, &quot;free_sulfur_dioxide&quot;, &quot;total_sulfur_dioxide&quot;, &quot;density&quot;, &quot;pH&quot;, &quot;sulphates&quot;, &quot;alcohol&quot;, &quot;quality&quot;)
-data &lt;- rename(data, !!!setNames(names(data), new_names))
+<div id="d0a4e762-7df6-4285-a4f0-29cc3ca20cc8" class="cell code" execution_count="28" vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<pre class="r"><code>data &lt;- data_cleaning(url)
 
-# colnames(data)
-data$quality &lt;- as.integer(data$quality)
-data$fixed_acidity&lt;- as.double(data$fixed_acidity)
-data$volatile_acidity&lt;- as.double(data$volatile_acidity)
-data$citric_acid&lt;- as.double(data$citric_acid)
-data$residual_sugar&lt;- as.double(data$residual_sugar)
-data$free_sulfur_dioxide&lt;- as.double(data$free_sulfur_dioxide)
-data$total_sulfur_dioxide&lt;- as.double(data$total_sulfur_dioxide)
-data$chlorides&lt;- as.double(data$chlorides)
-data$density&lt;- as.double(data$density)
-data$pH&lt;- as.double(data$pH)
-data$sulphates&lt;- as.double(data$sulphates)
-data$alcohol&lt;- as.double(data$alcohol)
-data$quality[data$quality==1] = &quot;unsatisfactory&quot;
-data$quality[data$quality==2] = &quot;unsatisfactory&quot;
-data$quality[data$quality==3] = &quot;unsatisfactory&quot;
-data$quality[data$quality==4] = &quot;unsatisfactory&quot;
-data$quality[data$quality==5] = &quot;average&quot;
-data$quality[data$quality==6] = &quot;average&quot;
-data$quality[data$quality==7] = &quot;Great&quot;
-data$quality[data$quality==8] = &quot;Great&quot;
-data$quality[data$quality==9] = &quot;Great&quot;
-data$quality = as.factor(data$quality)
 table(data$quality)
 head(data)</code></pre>
-</div>
-</div>
 <div id="analysis" class="section level2">
 <h2>Analysis</h2>
 <div id="summary-of-the-data" class="section level3">
@@ -593,7 +569,6 @@ conf_mat</code></pre>
 1</strong></p>
 </div>
 </div>
-</div>
 <div id="results" class="section level1">
 <h1>Results</h1>
 <p>Data was split into 75% training and 25% testing sets. The
@@ -610,6 +585,10 @@ confusion matrix in Table 3. We got that the estimate to be 1 exactly.
 We also found that the standard error for our best k was very low:
 0.00466. This means that our prediction was very accurate when testing
 our prediction data.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="discussion" class="section level1">
 <h1>Discussion</h1>
