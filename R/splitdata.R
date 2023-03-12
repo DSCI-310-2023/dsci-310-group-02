@@ -1,3 +1,6 @@
+# Author: Peter Lee
+# Date: 10-03-2023
+
 #' Loading in the in data
 #'
 #' uses the read_delim function to be able 

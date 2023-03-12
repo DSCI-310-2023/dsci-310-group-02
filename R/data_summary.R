@@ -1,3 +1,6 @@
+# Author: Kashish Joshipura
+# Date: 10-03-2023
+
 #' Summarize the data
 #'
 #' Creates a new data frame with three columns 
