@@ -19,7 +19,7 @@
 
 library(tidyverse)
 
-data_summary_fun <- function(file_path_url, col) {
+data_summary <- function(file_path_url, col) {
   data <- read_delim(file_path_url, ";")
   new_names <- c("fixed_acidity", "volatile_acidity", "citric_acid", "residual_sugar","chlorides", "free_sulfur_dioxide", 
                  "total_sulfur_dioxide", "density","pH", "sulphates", "alcohol", "quality")
