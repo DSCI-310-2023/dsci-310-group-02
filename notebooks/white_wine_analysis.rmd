@@ -30,6 +30,7 @@ library("ggplot2")
 library("GGally")
 source("../dsci-310-group-02/R/data_summary.R")
 source("../dsci-310-group-02/R/cleaning.R")
+source("../dsci-310-group-02/R/data_plot.R")
 source("../dsci-310-group-02/R/splitdata.R")
 ```
 
@@ -88,7 +89,7 @@ Data cleaning was performed as following steps:
     them as a factor for the dataset<br>
 3.  Set each column as a double expect quality column
 
-::: {#d0a4e762-7df6-4285-a4f0-29cc3ca20cc8 .cell .code execution_count="28" vscode="{\"languageId\":\"r\"}"}
+
 ``` r
 data <- data_cleaning(url)
 
@@ -122,17 +123,8 @@ chlorides_summary
 ### Counting and graphinh all the different quality of wines
 
 ``` r
-options(repr.plot.width = 12, repr.plot.height = 8)
-data %>%
-  group_by(quality) %>%
-  tally()
-
-quality_distribution <- data %>% 
-    ggplot(aes(x = quality, fill = quality)) +
-    geom_bar() +
-    labs(x = "Wine Wine Quality", y = "Number of Occurances", fill = "Wine Category") +
-    ggtitle("Total Count of White Wine Quality")
-quality_distribution
+c_data_path <- "../data/cleaned_data.csv"
+count_plot(c_data_path)
 ```
 
 **Table.1. & Figure. 1. Total Count of White Wine Quality**
@@ -142,7 +134,7 @@ quality_distribution
 ### Looking at the correlation between all predictors and the predicted
 
 ``` r
-ggpairs(data)
+ggpairs_plot(c_data_path)
 ```
 
 ### Splitting a training and testing data set and creating a recipe for it
