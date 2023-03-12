@@ -13,6 +13,9 @@ jupyter:
     version: 4.2.2
   nbformat: 4
   nbformat_minor: 5
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ::: {#a46479c0 .cell .markdown}
@@ -28,7 +31,7 @@ Authors: Peter Lee, Kashish Joshipura, Eric Huang
 :::
 
 ::: {#e81d48ae-a78a-4a49-9468-4b30533d5bee .cell .code execution_count="52" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 library(tidyverse)
 library(repr)
 library(tidymodels)
@@ -37,6 +40,7 @@ library(kknn)
 library("ggplot2")                     
 library("GGally")
 source("../dsci-310-group-02/R/data_summary.R")
+source("../dsci-310-group-02/R/cleaning.R")
 source("../dsci-310-group-02/R/splitdata.R")
 ```
 :::
@@ -51,7 +55,7 @@ k-nearest neighbor algorithm to classify and predict white wine. This
 model can help the wine rating association or connoisseur understand the
 relationship between each variable such as acidity, density and etc.
 Therefore, they are able to determine the quality of wine more
-accurately or less objectively. While the average wine enjoyer wouldn\'t
+accurately or less objectively. While the average wine enjoyer wouldn't
 know much about wine other than it is made from grapes and fermented.
 Therefore our group decided to dig deeper into the production of wine
 and how each factor contributes to its quality. In this project we would
@@ -61,13 +65,12 @@ we are able to group each variables to test each of their correlation
 with the quality itself. We will also be using cross validation to
 confirm our prediction results with our training data to verify the
 authenticity of our model. We hope that this project is able to help you
-get a better insight our your \"average\" wine that you are drinking.
-The dataset that we will be using for this analysis is 12
-characteristics of the Portuguese \"Vinho Verde\" wine collected during
-Oct., 2009 from [Wine Quality Data
-Set](https://archive.ics.uci.edu/ml/datasets/wine+quality). This data
-consists of all chemical factors that makes up a wine such as pH,
-alcohol percentage, density, sulfur dioxide and etc.
+get a better insight our your "average" wine that you are drinking. The
+dataset that we will be using for this analysis is 12 characteristics of
+the Portuguese "Vinho Verde" wine collected during Oct., 2009 from [Wine
+Quality Data Set](https://archive.ics.uci.edu/ml/datasets/wine+quality).
+This data consists of all chemical factors that makes up a wine such as
+pH, alcohol percentage, density, sulfur dioxide and etc.
 
 The question that the project wants to answer is How does each factor
 affect the overall wine quality?
@@ -82,7 +85,7 @@ affect the overall wine quality?
 :::
 
 ::: {#f0b57c4b-29a2-4ccb-98c9-64298ba50ad4 .cell .code execution_count="27" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 url <- "https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/winequality-white.csv"
 data = read_delim(url, ";")
 head(data)
@@ -99,17 +102,16 @@ head(data)
 :::
 
 ::: {.output .display_data}
-
 A tibble: 6 × 12
 
-| fixed acidity &lt;dbl&gt; | volatile acidity &lt;dbl&gt; | citric acid &lt;dbl&gt; | residual sugar &lt;dbl&gt; | chlorides &lt;dbl&gt; | free sulfur dioxide &lt;dbl&gt; | total sulfur dioxide &lt;dbl&gt; | density &lt;dbl&gt; | pH &lt;dbl&gt; | sulphates &lt;dbl&gt; | alcohol &lt;dbl&gt; | quality &lt;dbl&gt; |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 7.0 | 0.27 | 0.36 | 20.7 | 0.045 | 45 | 170 | 1.0010 | 3.00 | 0.45 |  8.8 | 6 |
-| 6.3 | 0.30 | 0.34 |  1.6 | 0.049 | 14 | 132 | 0.9940 | 3.30 | 0.49 |  9.5 | 6 |
-| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | 6 |
-| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | 6 |
-| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | 6 |
-| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | 6 |
+| fixed acidity \<dbl\> | volatile acidity \<dbl\> | citric acid \<dbl\> | residual sugar \<dbl\> | chlorides \<dbl\> | free sulfur dioxide \<dbl\> | total sulfur dioxide \<dbl\> | density \<dbl\> | pH \<dbl\> | sulphates \<dbl\> | alcohol \<dbl\> | quality \<dbl\> |
+|------|------|------|------|------|------|------|------|------|------|------|------|
+| 7.0                   | 0.27                     | 0.36                | 20.7                   | 0.045             | 45                          | 170                          | 1.0010          | 3.00       | 0.45              | 8.8             | 6               |
+| 6.3                   | 0.30                     | 0.34                | 1.6                    | 0.049             | 14                          | 132                          | 0.9940          | 3.30       | 0.49              | 9.5             | 6               |
+| 8.1                   | 0.28                     | 0.40                | 6.9                    | 0.050             | 30                          | 97                           | 0.9951          | 3.26       | 0.44              | 10.1            | 6               |
+| 7.2                   | 0.23                     | 0.32                | 8.5                    | 0.058             | 47                          | 186                          | 0.9956          | 3.19       | 0.40              | 9.9             | 6               |
+| 7.2                   | 0.23                     | 0.32                | 8.5                    | 0.058             | 47                          | 186                          | 0.9956          | 3.19       | 0.40              | 9.9             | 6               |
+| 8.1                   | 0.28                     | 0.40                | 6.9                    | 0.050             | 30                          | 97                           | 0.9951          | 3.26       | 0.44              | 10.1            | 6               |
 :::
 :::
 
@@ -118,63 +120,37 @@ A tibble: 6 × 12
 
 Data cleaning was performed as following steps:
 
-1.  Changing the column names so they don\'t have spaces in between them
-    `<br>`{=html}
+1.  Changing the column names so they don't have spaces in between them
+    <br>
 2.  Labelling the white wine quality as categorical values and setting
-    them as a factor for the dataset`<br>`{=html}
+    them as a factor for the dataset<br>
 3.  Set each column as a double expect quality column
 :::
 
 ::: {#d0a4e762-7df6-4285-a4f0-29cc3ca20cc8 .cell .code execution_count="28" vscode="{\"languageId\":\"r\"}"}
-``` R
-new_names <- c("fixed_acidity", "volatile_acidity", "citric_acid", "residual_sugar", "chlorides", "free_sulfur_dioxide", "total_sulfur_dioxide", "density", "pH", "sulphates", "alcohol", "quality")
-data <- rename(data, !!!setNames(names(data), new_names))
+``` r
+data <- data_cleaning(url)
 
-# colnames(data)
-data$quality <- as.integer(data$quality)
-data$fixed_acidity<- as.double(data$fixed_acidity)
-data$volatile_acidity<- as.double(data$volatile_acidity)
-data$citric_acid<- as.double(data$citric_acid)
-data$residual_sugar<- as.double(data$residual_sugar)
-data$free_sulfur_dioxide<- as.double(data$free_sulfur_dioxide)
-data$total_sulfur_dioxide<- as.double(data$total_sulfur_dioxide)
-data$chlorides<- as.double(data$chlorides)
-data$density<- as.double(data$density)
-data$pH<- as.double(data$pH)
-data$sulphates<- as.double(data$sulphates)
-data$alcohol<- as.double(data$alcohol)
-data$quality[data$quality==1] = "unsatisfactory"
-data$quality[data$quality==2] = "unsatisfactory"
-data$quality[data$quality==3] = "unsatisfactory"
-data$quality[data$quality==4] = "unsatisfactory"
-data$quality[data$quality==5] = "average"
-data$quality[data$quality==6] = "average"
-data$quality[data$quality==7] = "Great"
-data$quality[data$quality==8] = "Great"
-data$quality[data$quality==9] = "Great"
-data$quality = as.factor(data$quality)
 table(data$quality)
 head(data)
 ```
 
 ::: {.output .display_data}
-
              Great        average unsatisfactory 
               1060           3655            183 
 :::
 
 ::: {.output .display_data}
-
 A tibble: 6 × 12
 
-| fixed_acidity &lt;dbl&gt; | volatile_acidity &lt;dbl&gt; | citric_acid &lt;dbl&gt; | residual_sugar &lt;dbl&gt; | chlorides &lt;dbl&gt; | free_sulfur_dioxide &lt;dbl&gt; | total_sulfur_dioxide &lt;dbl&gt; | density &lt;dbl&gt; | pH &lt;dbl&gt; | sulphates &lt;dbl&gt; | alcohol &lt;dbl&gt; | quality &lt;fct&gt; |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 7.0 | 0.27 | 0.36 | 20.7 | 0.045 | 45 | 170 | 1.0010 | 3.00 | 0.45 |  8.8 | average |
-| 6.3 | 0.30 | 0.34 |  1.6 | 0.049 | 14 | 132 | 0.9940 | 3.30 | 0.49 |  9.5 | average |
-| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | average |
-| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | average |
-| 7.2 | 0.23 | 0.32 |  8.5 | 0.058 | 47 | 186 | 0.9956 | 3.19 | 0.40 |  9.9 | average |
-| 8.1 | 0.28 | 0.40 |  6.9 | 0.050 | 30 |  97 | 0.9951 | 3.26 | 0.44 | 10.1 | average |
+| fixed_acidity \<dbl\> | volatile_acidity \<dbl\> | citric_acid \<dbl\> | residual_sugar \<dbl\> | chlorides \<dbl\> | free_sulfur_dioxide \<dbl\> | total_sulfur_dioxide \<dbl\> | density \<dbl\> | pH \<dbl\> | sulphates \<dbl\> | alcohol \<dbl\> | quality \<fct\> |
+|------|------|------|------|------|------|------|------|------|------|------|------|
+| 7.0                   | 0.27                     | 0.36                | 20.7                   | 0.045             | 45                          | 170                          | 1.0010          | 3.00       | 0.45              | 8.8             | average         |
+| 6.3                   | 0.30                     | 0.34                | 1.6                    | 0.049             | 14                          | 132                          | 0.9940          | 3.30       | 0.49              | 9.5             | average         |
+| 8.1                   | 0.28                     | 0.40                | 6.9                    | 0.050             | 30                          | 97                           | 0.9951          | 3.26       | 0.44              | 10.1            | average         |
+| 7.2                   | 0.23                     | 0.32                | 8.5                    | 0.058             | 47                          | 186                          | 0.9956          | 3.19       | 0.40              | 9.9             | average         |
+| 7.2                   | 0.23                     | 0.32                | 8.5                    | 0.058             | 47                          | 186                          | 0.9956          | 3.19       | 0.40              | 9.9             | average         |
+| 8.1                   | 0.28                     | 0.40                | 6.9                    | 0.050             | 30                          | 97                           | 0.9951          | 3.26       | 0.44              | 10.1            | average         |
 :::
 :::
 
@@ -187,7 +163,7 @@ A tibble: 6 × 12
 :::
 
 ::: {#307a42f4 .cell .code execution_count="45" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 alcohol_summary <- data_summary(url,"alcohol")
 alcohol_summary
 ```
@@ -203,17 +179,16 @@ alcohol_summary
 :::
 
 ::: {.output .display_data}
-
 A tibble: 1 × 3
 
-| mean &lt;dbl&gt; | median &lt;dbl&gt; | standard_deviation &lt;dbl&gt; |
-|---|---|---|
-| 10.51427 | 10.4 | 1.230621 |
+| mean \<dbl\> | median \<dbl\> | standard_deviation \<dbl\> |
+|--------------|----------------|----------------------------|
+| 10.51427     | 10.4           | 1.230621                   |
 :::
 :::
 
 ::: {#847d6f59 .cell .code execution_count="30" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 sulphates_summary <- data_summary(url,"sulphates")
 sulphates_summary
 ```
@@ -229,17 +204,16 @@ sulphates_summary
 :::
 
 ::: {.output .display_data}
-
 A tibble: 1 × 3
 
-| mean &lt;dbl&gt; | median &lt;dbl&gt; | standard_deviation &lt;dbl&gt; |
-|---|---|---|
-| 0.4898469 | 0.47 | 0.1141258 |
+| mean \<dbl\> | median \<dbl\> | standard_deviation \<dbl\> |
+|--------------|----------------|----------------------------|
+| 0.4898469    | 0.47           | 0.1141258                  |
 :::
 :::
 
 ::: {#53dd1b47 .cell .code execution_count="31" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 chlorides_summary <- data_summary(url,"chlorides")
 chlorides_summary
 ```
@@ -255,12 +229,11 @@ chlorides_summary
 :::
 
 ::: {.output .display_data}
-
 A tibble: 1 × 3
 
-| mean &lt;dbl&gt; | median &lt;dbl&gt; | standard_deviation &lt;dbl&gt; |
-|---|---|---|
-| 0.04577236 | 0.043 | 0.02184797 |
+| mean \<dbl\> | median \<dbl\> | standard_deviation \<dbl\> |
+|--------------|----------------|----------------------------|
+| 0.04577236   | 0.043          | 0.02184797                 |
 :::
 :::
 
@@ -269,7 +242,7 @@ A tibble: 1 × 3
 :::
 
 ::: {#b0089f8b-ba49-4920-9b80-874cfbfe0581 .cell .code execution_count="32" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 options(repr.plot.width = 12, repr.plot.height = 8)
 data %>%
   group_by(quality) %>%
@@ -284,14 +257,13 @@ quality_distribution
 ```
 
 ::: {.output .display_data}
-
 A tibble: 3 × 2
 
-| quality &lt;fct&gt; | n &lt;int&gt; |
-|---|---|
-| Great          | 1060 |
-| average        | 3655 |
-| unsatisfactory |  183 |
+| quality \<fct\> | n \<int\> |
+|-----------------|-----------|
+| Great           | 1060      |
+| average         | 3655      |
+| unsatisfactory  | 183       |
 :::
 
 ::: {.output .display_data}
@@ -309,7 +281,7 @@ width="720"}
 :::
 
 ::: {#4186dd9a-5ff5-4f11-95f9-9d968faafdc7 .cell .code execution_count="33" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 ggpairs(data)
 ```
 
@@ -353,7 +325,7 @@ variable**
 :::
 
 ::: {#63f4a91a-1af6-4a98-ab39-1b57b5218632 .cell .code execution_count="34" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 
 
@@ -380,22 +352,21 @@ head(training_data)
 :::
 
 ::: {.output .display_data}
-
 A tibble: 6 × 12
 
-| fixed acidity &lt;dbl&gt; | volatile acidity &lt;dbl&gt; | citric acid &lt;dbl&gt; | residual sugar &lt;dbl&gt; | chlorides &lt;dbl&gt; | free sulfur dioxide &lt;dbl&gt; | total sulfur dioxide &lt;dbl&gt; | density &lt;dbl&gt; | pH &lt;dbl&gt; | sulphates &lt;dbl&gt; | alcohol &lt;dbl&gt; | quality &lt;dbl&gt; |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 8.1 | 0.27 | 0.41 |  1.45 | 0.033 | 11 |  63 | 0.9908 | 2.99 | 0.56 | 12.0 | 5 |
-| 8.6 | 0.23 | 0.40 |  4.20 | 0.035 | 17 | 109 | 0.9947 | 3.14 | 0.53 |  9.7 | 5 |
-| 8.3 | 0.42 | 0.62 | 19.25 | 0.040 | 41 | 172 | 1.0002 | 2.98 | 0.67 |  9.7 | 5 |
-| 6.5 | 0.31 | 0.14 |  7.50 | 0.044 | 34 | 133 | 0.9955 | 3.22 | 0.50 |  9.5 | 5 |
-| 7.6 | 0.67 | 0.14 |  1.50 | 0.074 | 25 | 168 | 0.9937 | 3.05 | 0.51 |  9.3 | 5 |
-| 7.3 | 0.28 | 0.43 |  1.70 | 0.080 | 21 | 123 | 0.9905 | 3.19 | 0.42 | 12.8 | 5 |
+| fixed acidity \<dbl\> | volatile acidity \<dbl\> | citric acid \<dbl\> | residual sugar \<dbl\> | chlorides \<dbl\> | free sulfur dioxide \<dbl\> | total sulfur dioxide \<dbl\> | density \<dbl\> | pH \<dbl\> | sulphates \<dbl\> | alcohol \<dbl\> | quality \<dbl\> |
+|------|------|------|------|------|------|------|------|------|------|------|------|
+| 8.1                   | 0.27                     | 0.41                | 1.45                   | 0.033             | 11                          | 63                           | 0.9908          | 2.99       | 0.56              | 12.0            | 5               |
+| 8.6                   | 0.23                     | 0.40                | 4.20                   | 0.035             | 17                          | 109                          | 0.9947          | 3.14       | 0.53              | 9.7             | 5               |
+| 8.3                   | 0.42                     | 0.62                | 19.25                  | 0.040             | 41                          | 172                          | 1.0002          | 2.98       | 0.67              | 9.7             | 5               |
+| 6.5                   | 0.31                     | 0.14                | 7.50                   | 0.044             | 34                          | 133                          | 0.9955          | 3.22       | 0.50              | 9.5             | 5               |
+| 7.6                   | 0.67                     | 0.14                | 1.50                   | 0.074             | 25                          | 168                          | 0.9937          | 3.05       | 0.51              | 9.3             | 5               |
+| 7.3                   | 0.28                     | 0.43                | 1.70                   | 0.080             | 21                          | 123                          | 0.9905          | 3.19       | 0.42              | 12.8            | 5               |
 :::
 :::
 
 ::: {#8b17cf7f-51bc-4580-8b7f-7cd35c1e5e17 .cell .code execution_count="35" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 recipe <- recipe(quality ~ . , data = data)%>%
     step_center(all_predictors()) %>%
@@ -425,7 +396,7 @@ recipe
 :::
 
 ::: {#e72d6ff4-d507-49e0-9979-e3458a7e7362 .cell .code execution_count="36" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 
 vfold <- vfold_cv(data, v = 10, strata = quality)
@@ -451,7 +422,7 @@ knn_tune
 :::
 
 ::: {#eff33a6c-0371-48dd-8705-7a81eb578ffe .cell .code execution_count="37" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 knn_results <- workflow() %>%
     add_recipe(recipe) %>%
@@ -462,37 +433,36 @@ knn_results
 ```
 
 ::: {.output .display_data}
-
 A tibble: 26 × 7
 
-| neighbors &lt;int&gt; | .metric &lt;chr&gt; | .estimator &lt;chr&gt; | mean &lt;dbl&gt; | n &lt;int&gt; | std_err &lt;dbl&gt; | .config &lt;chr&gt; |
-|---|---|---|---|---|---|---|
-|  1 | accuracy | multiclass | 0.8231849 | 10 | 0.005102368 | Preprocessor1_Model01 |
-|  1 | roc_auc  | hand_till  | 0.7211623 | 10 | 0.007749102 | Preprocessor1_Model01 |
-|  2 | accuracy | multiclass | 0.8231849 | 10 | 0.005102368 | Preprocessor1_Model02 |
-|  2 | roc_auc  | hand_till  | 0.7449759 | 10 | 0.008806168 | Preprocessor1_Model02 |
-|  3 | accuracy | multiclass | 0.7876571 | 10 | 0.003926096 | Preprocessor1_Model03 |
-|  3 | roc_auc  | hand_till  | 0.7661830 | 10 | 0.011233926 | Preprocessor1_Model03 |
-|  4 | accuracy | multiclass | 0.7870440 | 10 | 0.003661544 | Preprocessor1_Model04 |
-|  4 | roc_auc  | hand_till  | 0.7711363 | 10 | 0.011628936 | Preprocessor1_Model04 |
-|  5 | accuracy | multiclass | 0.7925484 | 10 | 0.006052842 | Preprocessor1_Model05 |
-|  5 | roc_auc  | hand_till  | 0.7747168 | 10 | 0.011625419 | Preprocessor1_Model05 |
-|  6 | accuracy | multiclass | 0.7921407 | 10 | 0.006025019 | Preprocessor1_Model06 |
-|  6 | roc_auc  | hand_till  | 0.7791269 | 10 | 0.013014304 | Preprocessor1_Model06 |
-|  7 | accuracy | multiclass | 0.7931623 | 10 | 0.005691028 | Preprocessor1_Model07 |
-|  7 | roc_auc  | hand_till  | 0.7860600 | 10 | 0.012246006 | Preprocessor1_Model07 |
-|  8 | accuracy | multiclass | 0.7943889 | 10 | 0.005594349 | Preprocessor1_Model08 |
-|  8 | roc_auc  | hand_till  | 0.7830464 | 10 | 0.011654188 | Preprocessor1_Model08 |
-|  9 | accuracy | multiclass | 0.7913348 | 10 | 0.004603264 | Preprocessor1_Model09 |
-|  9 | roc_auc  | hand_till  | 0.7830950 | 10 | 0.011272634 | Preprocessor1_Model09 |
-| 11 | accuracy | multiclass | 0.7911344 | 10 | 0.005213681 | Preprocessor1_Model10 |
-| 11 | roc_auc  | hand_till  | 0.7885967 | 10 | 0.007801708 | Preprocessor1_Model10 |
-| 12 | accuracy | multiclass | 0.7899066 | 10 | 0.005744716 | Preprocessor1_Model11 |
-| 12 | roc_auc  | hand_till  | 0.7898406 | 10 | 0.008463019 | Preprocessor1_Model11 |
-| 14 | accuracy | multiclass | 0.7864339 | 10 | 0.005262338 | Preprocessor1_Model12 |
-| 14 | roc_auc  | hand_till  | 0.7930254 | 10 | 0.008834923 | Preprocessor1_Model12 |
-| 15 | accuracy | multiclass | 0.7874560 | 10 | 0.004296821 | Preprocessor1_Model13 |
-| 15 | roc_auc  | hand_till  | 0.7930571 | 10 | 0.008983637 | Preprocessor1_Model13 |
+| neighbors \<int\> | .metric \<chr\> | .estimator \<chr\> | mean \<dbl\> | n \<int\> | std_err \<dbl\> | .config \<chr\>       |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| 1                 | accuracy        | multiclass         | 0.8231849    | 10        | 0.005102368     | Preprocessor1_Model01 |
+| 1                 | roc_auc         | hand_till          | 0.7211623    | 10        | 0.007749102     | Preprocessor1_Model01 |
+| 2                 | accuracy        | multiclass         | 0.8231849    | 10        | 0.005102368     | Preprocessor1_Model02 |
+| 2                 | roc_auc         | hand_till          | 0.7449759    | 10        | 0.008806168     | Preprocessor1_Model02 |
+| 3                 | accuracy        | multiclass         | 0.7876571    | 10        | 0.003926096     | Preprocessor1_Model03 |
+| 3                 | roc_auc         | hand_till          | 0.7661830    | 10        | 0.011233926     | Preprocessor1_Model03 |
+| 4                 | accuracy        | multiclass         | 0.7870440    | 10        | 0.003661544     | Preprocessor1_Model04 |
+| 4                 | roc_auc         | hand_till          | 0.7711363    | 10        | 0.011628936     | Preprocessor1_Model04 |
+| 5                 | accuracy        | multiclass         | 0.7925484    | 10        | 0.006052842     | Preprocessor1_Model05 |
+| 5                 | roc_auc         | hand_till          | 0.7747168    | 10        | 0.011625419     | Preprocessor1_Model05 |
+| 6                 | accuracy        | multiclass         | 0.7921407    | 10        | 0.006025019     | Preprocessor1_Model06 |
+| 6                 | roc_auc         | hand_till          | 0.7791269    | 10        | 0.013014304     | Preprocessor1_Model06 |
+| 7                 | accuracy        | multiclass         | 0.7931623    | 10        | 0.005691028     | Preprocessor1_Model07 |
+| 7                 | roc_auc         | hand_till          | 0.7860600    | 10        | 0.012246006     | Preprocessor1_Model07 |
+| 8                 | accuracy        | multiclass         | 0.7943889    | 10        | 0.005594349     | Preprocessor1_Model08 |
+| 8                 | roc_auc         | hand_till          | 0.7830464    | 10        | 0.011654188     | Preprocessor1_Model08 |
+| 9                 | accuracy        | multiclass         | 0.7913348    | 10        | 0.004603264     | Preprocessor1_Model09 |
+| 9                 | roc_auc         | hand_till          | 0.7830950    | 10        | 0.011272634     | Preprocessor1_Model09 |
+| 11                | accuracy        | multiclass         | 0.7911344    | 10        | 0.005213681     | Preprocessor1_Model10 |
+| 11                | roc_auc         | hand_till          | 0.7885967    | 10        | 0.007801708     | Preprocessor1_Model10 |
+| 12                | accuracy        | multiclass         | 0.7899066    | 10        | 0.005744716     | Preprocessor1_Model11 |
+| 12                | roc_auc         | hand_till          | 0.7898406    | 10        | 0.008463019     | Preprocessor1_Model11 |
+| 14                | accuracy        | multiclass         | 0.7864339    | 10        | 0.005262338     | Preprocessor1_Model12 |
+| 14                | roc_auc         | hand_till          | 0.7930254    | 10        | 0.008834923     | Preprocessor1_Model12 |
+| 15                | accuracy        | multiclass         | 0.7874560    | 10        | 0.004296821     | Preprocessor1_Model13 |
+| 15                | roc_auc         | hand_till          | 0.7930571    | 10        | 0.008983637     | Preprocessor1_Model13 |
 :::
 :::
 
@@ -501,7 +471,7 @@ A tibble: 26 × 7
 :::
 
 ::: {#967a47e8-72da-4fa4-b641-f68103d8b6b0 .cell .code execution_count="38" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 
 accuracies <- knn_results %>% 
@@ -531,7 +501,7 @@ neighbors**
 :::
 
 ::: {#c3e71b9d-4502-4207-92ae-f9f3f82a5aa6 .cell .code execution_count="39" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 
 accurate_k <-  accuracies %>% filter(mean == max(mean)) %>% slice(1)
 accurate_k
@@ -541,12 +511,11 @@ k
 ```
 
 ::: {.output .display_data}
-
 A tibble: 1 × 7
 
-| neighbors &lt;int&gt; | .metric &lt;chr&gt; | .estimator &lt;chr&gt; | mean &lt;dbl&gt; | n &lt;int&gt; | std_err &lt;dbl&gt; | .config &lt;chr&gt; |
-|---|---|---|---|---|---|---|
-| 1 | accuracy | multiclass | 0.8231849 | 10 | 0.005102368 | Preprocessor1_Model01 |
+| neighbors \<int\> | .metric \<chr\> | .estimator \<chr\> | mean \<dbl\> | n \<int\> | std_err \<dbl\> | .config \<chr\>       |
+|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| 1                 | accuracy        | multiclass         | 0.8231849    | 10        | 0.005102368     | Preprocessor1_Model01 |
 :::
 
 ::: {.output .display_data}
@@ -564,7 +533,7 @@ error on the test data**
 :::
 
 ::: {#a3b0973e-a4b2-4441-95b5-4e0f1f3863a1 .cell .code execution_count="40" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 
 spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k) %>%
@@ -617,7 +586,7 @@ fit
 :::
 
 ::: {#423e1f67-e87e-4bda-a6ac-4f351aa8d5b5 .cell .code execution_count="41" vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 set.seed(5678)
 
 prediction <- predict(fit, testing) %>%
@@ -634,13 +603,12 @@ conf_mat
 ```
 
 ::: {.output .display_data}
-
 A tibble: 2 × 3
 
-| .metric &lt;chr&gt; | .estimator &lt;chr&gt; | .estimate &lt;dbl&gt; |
-|---|---|---|
-| accuracy | multiclass | 1 |
-| kap      | multiclass | 1 |
+| .metric \<chr\> | .estimator \<chr\> | .estimate \<dbl\> |
+|-----------------|--------------------|-------------------|
+| accuracy        | multiclass         | 1                 |
+| kap             | multiclass         | 1                 |
 :::
 
 ::: {.output .display_data}
@@ -666,13 +634,13 @@ modelling. The result showed that there was no evidence of having strong
 relationship between them was omitted from modeling. We first perform a
 10-fold cross validation test. We then created a workflow based on the
 cross validation and recipe that we made.\
-`<Br>`{=html} After using our KNN Classification, we figured out that
-our best k-neighbour would be 1 as the result shown in Figure 3 and
-Table 2. Then we use the best_k to predict our accuracy and present it
-through a confusion matrix in Table 3. We got that the estimate to be 1
-exactly. We also found that the standard error for our best k was very
-low: 0.00466. This means that our prediction was very accurate when
-testing our prediction data.
+<Br> After using our KNN Classification, we figured out that our best
+k-neighbour would be 1 as the result shown in Figure 3 and Table 2. Then
+we use the best_k to predict our accuracy and present it through a
+confusion matrix in Table 3. We got that the estimate to be 1 exactly.
+We also found that the standard error for our best k was very low:
+0.00466. This means that our prediction was very accurate when testing
+our prediction data.
 :::
 
 ::: {#f4766941-f402-4f8e-9892-4de7cef6288f .cell .markdown}
@@ -700,18 +668,18 @@ R\^2 we get from the values.
 Shin, T. (2021, December 14). Predicting Wine Quality with Several
 Classification Techniques. Medium.
 <https://towardsdatascience.com/predicting-wine-quality-with-several-classification-techniques-179038ea6434>
-`<br>`{=html} `<br>`{=html} McCarthy, E., & Ewing-Mulligan, M. (2019,
-January 30). Wine Quality How to Judge Good or Bad Wines. Dummies.
+<br> <br> McCarthy, E., & Ewing-Mulligan, M. (2019, January 30). Wine
+Quality How to Judge Good or Bad Wines. Dummies.
 <https://www.dummies.com/article/home-auto-hobbies/food-drink/beverages/wine/wine-quality-how-to-judge-good-or-bad-wines-259773/>
-`<br>`{=html} `<br>`{=html} McCarthy, S. Jackson, R. (2008). What
-constitutes wine quality. Science Direct.
-<https://www.sciencedirect.com/topics/food-science/wine-quality>
-`<br>`{=html} `<br>`{=html} Staff, U. T. (2020, March 11). 13 ways to
-judge the quality of a wine.
+<br> <br> McCarthy, S. Jackson, R. (2008). What constitutes wine
+quality. Science Direct.
+<https://www.sciencedirect.com/topics/food-science/wine-quality> <br>
+<br> Staff, U. T. (2020, March 11). 13 ways to judge the quality of a
+wine.
 <https://eu.usatoday.com/picture-gallery/life/2020/03/11/13-ways-to-tell-if-a-wine-is-actually-good/111412612/>
 :::
 
 ::: {#3aa9200a-8891-4fc9-9f24-7f69f2721bf9 .cell .code vscode="{\"languageId\":\"r\"}"}
-``` R
+``` r
 ```
 :::
