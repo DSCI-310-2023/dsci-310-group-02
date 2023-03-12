@@ -10,9 +10,12 @@
 #' @return A cleaned data frames with original columns and
 #' a new column "quality"
 #' 
+#' @export cleaned_data.csv The cleaned data frame for visualization
+#' 
 #' @examples
 #' data_cleaning("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv")
 
+  
 library(tidyverse)
 
 data_cleaning <- function(file_path_url){
@@ -44,6 +47,8 @@ data_cleaning <- function(file_path_url){
   data$quality[data$quality==8] = "Great"
   data$quality[data$quality==9] = "Great"
   data$quality = as.factor(data$quality)
-  
+
+  write_csv(data, paste0("../data", "/cleaned_data.csv"))
   return(data)
 }
+
