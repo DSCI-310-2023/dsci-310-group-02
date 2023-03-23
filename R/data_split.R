@@ -1,13 +1,12 @@
 # Author: Peter Lee
 # Date: 10-03-2023
-
-#' Loading in the in data
 #'
-#' uses the read_delim function to be able 
-#' to read the data in by seperating the data with ";"
-#' and spilt the data into a training and testing dataset 
-#' for setting up the knn recipe
-#' 
+#'
+#' Splitting the data
+#' Spilts the data into a training and testing dataset into 75% training and 25% testing
+#' that is used for setting up the knn recipe later. Check if the splitting of the training dataset
+#' is split with the correct seed and the correct data 
+#'
 #' @param file_path A string with the URL or path to the file.
 #'
 #' @return the training data from the specified file
