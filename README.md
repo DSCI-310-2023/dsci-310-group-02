@@ -37,7 +37,7 @@ http://localhost:8787
 You will be prompted to enter the credentials :
 - USERNAME = rstudio
 - PASSWORD = 00000
-
+```
 You will now be able to see the project under /home/rstudio/project
 To be able to view the analysis file (white_wine_analysis.rmd) in a readable format:
 - select white_wine_analysis.rmd 
@@ -50,7 +50,7 @@ In the terminal, navigate to the root of this project repository.
 Type the following in the terminal:
 ```
 docker-compose up -d  
-
+```
 - Once the container has launched, users need to type in "http://localhost:8787" in their preferred browser in order to launch a rstudio project.
 
 - Next, in rstudio, navigate to projects directory, and open white_wine_analysis.html or white_wine_analysis.rmd
