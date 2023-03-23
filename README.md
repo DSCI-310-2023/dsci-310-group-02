@@ -24,20 +24,20 @@ https://github.com/kashish1928/dsci-310-group-02.git
 ```
 and then, in the terminal, navigate to the root of this project.
 
-```
 Now, in order to run this type the following command in the terminal :
 ```
 docker run --rm -p 8787:8787 -e PASSWORD=00000  -v /$(pwd):/home/rstudio/project dsci-310-group-02
 ```
 
 Then go to your preferred browser and navigate to
-
+```
 http://localhost:8787
 ```
 You will be prompted to enter the credentials :
+```
 - USERNAME = rstudio
 - PASSWORD = 00000
-
+```
 You will now be able to see the project under /home/rstudio/project
 To be able to view the analysis file (white_wine_analysis.rmd) in a readable format:
 - select white_wine_analysis.rmd 
