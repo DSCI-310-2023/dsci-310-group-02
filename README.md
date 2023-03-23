@@ -50,7 +50,7 @@ In the terminal, navigate to the root of this project repository.
 Type the following in the terminal:
 ```
 docker-compose up -d  
-```
+
 - Once the container has launched, users need to type in "http://localhost:8787" in their preferred browser in order to launch a rstudio project.
 
 - Next, in rstudio, navigate to projects directory, and open white_wine_analysis.html or white_wine_analysis.rmd
