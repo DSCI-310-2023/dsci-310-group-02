@@ -1,5 +1,5 @@
 set.seed(123)
-source("R/data_split.R")
+source("../../R/data_split.R")
 
 # importing necessary libraries
 library(testthat)
@@ -11,4 +11,3 @@ data = read_delim("https://archive.ics.uci.edu/ml/machine-learning-databases/win
 # splitting it into training 75% and testing 25% 
 split <- initial_split(data, prop = 0.75, strata = quality)
 train <- training(split)
-
