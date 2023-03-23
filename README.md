@@ -31,7 +31,7 @@ docker run --rm -p 8787:8787 -e PASSWORD=00000  -v /$(pwd):/home/rstudio/project
 ```
 
 Then go to your preferred browser and navigate to
-```
+
 http://localhost:8787
 ```
 You will be prompted to enter the credentials :
