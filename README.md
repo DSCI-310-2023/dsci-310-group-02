@@ -24,9 +24,6 @@ https://github.com/kashish1928/dsci-310-group-02.git
 ```
 and then, in the terminal, navigate to the root of this project.
 
-Next, pull the Docker image (make sure you have Docker Desktop open when using any Docker commands on the terminal) using:
-```
-docker pull kashish1909/dsci-310-group-02:latest  
 ```
 Then run the following in your terminal to build this image :
 ```
