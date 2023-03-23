@@ -79,6 +79,6 @@ docker-compose up -d
 |ggplot2| 3.3.6 |
 | GGally | 2.1.2 |
 |knitr| 1.38 |
-
+|devtools| 2.4.5|
 ## License Information  
 The software provided in this project is offered under the MIT open source license. See LICENSE.md for more information.
