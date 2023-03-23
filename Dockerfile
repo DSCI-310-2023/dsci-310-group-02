@@ -1,4 +1,4 @@
-FROM rocker/rstudio:4.1.3
+FROM rocker/tidyverse:4.1.3
 
 RUN apt-get update && \
     apt-get install -y libxml2-dev && \
