@@ -37,7 +37,7 @@ http://localhost:8787
 You will be prompted to enter the credentials :
 - USERNAME = rstudio
 - PASSWORD = 00000
-```
+
 You will now be able to see the project under /home/rstudio/project
 To be able to view the analysis file (white_wine_analysis.rmd) in a readable format:
 - select white_wine_analysis.rmd 
