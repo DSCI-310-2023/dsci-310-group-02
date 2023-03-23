@@ -25,10 +25,6 @@ https://github.com/kashish1928/dsci-310-group-02.git
 and then, in the terminal, navigate to the root of this project.
 
 ```
-Then run the following in your terminal to build this image :
-```
-docker build -t dsci-310-group-02 . -f Dockerfile 
-```
 Now, in order to run this type the following command in the terminal :
 ```
 docker run --rm -p 8787:8787 -e PASSWORD=00000  -v /$(pwd):/home/rstudio/project dsci-310-group-02
