@@ -29,9 +29,9 @@ library("GGally")
 
 
 source("../R/data_summary.R")
-source("../R/data_cleaning.R")
+
 source("../R/data_plot.R")
-source("../R/splitdata.R")
+
 ```
 
 # Introduction
@@ -123,7 +123,7 @@ set.seed(5678)
 
 
 #training
-training_data <- splitdata(url)
+training_data <- data.split(url)
 
 
 # testing data
