@@ -1,28 +1,21 @@
-# Author: Kashish Joshipura
-# Date: 10-03-2023
+"
+Download the data csv from the web to the local filepath 
+as a csv file format.
 
-#' Loading in the data
-#'
-#' Creates a new data frame by loading in the data 
-#' with the specified delimnator
-#' then it returns the data as a new dataframe
-#'
-#' @param file_path_url A string with the URL or path to the file.
-#' @param col A string with the quoted name of the column to summarize.
-#'
-#' @return A data frame 
-#'
-#' @export
-#'
-#' @examples
-#' data_summary_fun("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv","alcohol")
-#' 
+Usage: R/data_load.R --url=<url> --out_dir=<out_dir>
+
+Options:
+--url=<url>           URL from where to download the data
+--out_dir=<out_dir>   Path(including filename) of where to write the file locally
+" -> doc
 
 library(tidyverse)
+library(docopt)
 
-data_load <- function(file_path_url, col) {
-  data <- read_delim(file_path_url, ";")
-  return(data)
+opt <- docopt(doc)
+main <- function(url, out_dir) {
+  data <- read_delim(url, ";")
+  write_csv(data, paste0(out_dir, "/raw_data.csv"))
 }
 
-
+main(opt[["--url"]], opt[["--out_dir"]])
