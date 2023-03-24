@@ -8,7 +8,7 @@ quality as catergorical values.
 Usage: R/data_cleaning.R --input=<input> --out_dir=<out_dir>
 
 Options:
---input=<input>       Path (including filename) to raw data (feather file)
+--input=<input>       Path (including filename) to raw data
 --out_dir=<out_dir>   Path to directory where the processed data should be written
 " -> doc
 
@@ -37,15 +37,6 @@ main <- function(input, out_dir){
   
   # write the cleaned data to file for plotting
   write_csv(raw_data_df, paste0(out_dir, "/cleaned_data.csv"))
-  
-  # split into training and test data
-  split <- initial_split(raw_data_df, prop = 0.75, strata = quality)
-  training_data <- training(split)
-  test_data <- testing(split)
-  
-  # write the training and test data to files
-  write_csv(training_data, paste0(out_dir, "/training_data.csv"))
-  write_csv(test_data, paste0(out_dir, "/test_data.csv"))
 }
 
 main(opt[["--input"]], opt[["--out_dir"]])
