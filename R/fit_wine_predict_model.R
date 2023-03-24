@@ -48,13 +48,13 @@ main <- function(train, out_dir){
   spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k) %>%
     set_engine("kknn") %>%
     set_mode("classification")
-  
+
   final_model <- workflow() %>%
     add_recipe(recipe) %>%
     add_model(spec) %>%
-    fit(data = data)
+    fit(train_df)
   
-  saveRDS(final_model, file = paste0(out_dir, "final_model.rds"))
+  saveRDS(final_model, file = paste0(out_dir, "/final_model.rds"))
 }
 
 main(opt[["--train"]], opt[["--out_dir"]])
