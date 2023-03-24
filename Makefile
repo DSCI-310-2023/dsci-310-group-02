@@ -24,6 +24,10 @@ data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R: R/da
 results/final_model.rds: R/fit_wine_predict_model.R data/training_data.csv
 	Rscript R/fit_wine_predict_model.R --train=data/training_data.csv --out_dir=results
 
+# Testing model
+results/final_model_quality.rds: R/wine_test_results.R data/test_data.csv
+	Rscript R/wine_test_results.R --test=data/test_data.csv --out_dir=results
+
 # Rendering the report
 notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/white_wine_analysis.rmd
 	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', c('bookdown::html_document2', 'bookdown::pdf_document2'))"
