@@ -10,15 +10,15 @@ data/winequality-white.csv:	R/data_load.R
 
 #Splitting and training the data
 data/training_data.csv tests/testthat/test-data_split.R:	R/data_split.R data/winequality-white.csv
-	Rscript R/data_split.R --raw=data/winequality-white.csv --out_dir=Results/
+	Rscript R/data_split.R --raw=data/winequality-white.csv --out_dir=results/
 
 #Fitting the data for the predict model
 
 #Graphing the data
 
 #Rendering the report
-notebooks/white_wine_analysis.rmd: 
- 
+notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/white_wine_analysis.rmd
+	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', c('bookdown::html_document2', 'bookdown::pdf_document2'))"
 
 clean: 
 	rm -rf data
