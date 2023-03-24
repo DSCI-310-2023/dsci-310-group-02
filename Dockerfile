@@ -10,3 +10,4 @@ RUN Rscript -e "remotes::install_version('kknn', version = '1.3.1', repos= 'http
 RUN Rscript -e "remotes::install_version('testthat', version = '3.1.6', repos= 'https://cran.r-project.org')"
 RUN Rscript -e "remotes::install_version('knitr','1.38', repos = 'https://cran.r-project.org')"
 RUN Rscript -e "remotes::install_version('devtools','2.4.5', repos = 'https://cran.r-project.org')"
+RUN Rscript -e "remotes::install_version('bookdown','0.33', repos = 'https://cran.r-project.org')"
