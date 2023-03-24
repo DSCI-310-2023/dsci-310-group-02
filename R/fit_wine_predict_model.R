@@ -1,6 +1,6 @@
 "
-Fits a knn modl on the pre-processed data and use the best k-neighbour to
-build the classification model
+Fit a knn model on the pre-processed data and use the best k-neighbour to
+build the classification model.
 
 Usage: R/fit_wine_predict_model.R --train=<train> --out_dir=<out_dir>
 
