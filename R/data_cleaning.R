@@ -21,12 +21,6 @@ main <- function(input, out_dir){
   raw_data <- read.csv(input, sep=";")
   raw_data_df <- as.data.frame(raw_data)
   
-  # Replace the spaces in column names with underscores
-  # colnames(raw_data_df) <- gsub(" ", "_", colnames(raw_data_df))
-
-  # Correct the type of the value in each column
-  #raw_data_df %>% type_convert(raw_data_df)
-  
   # Categorize the quality
   raw_data_df <- 
     raw_data_df %>%
