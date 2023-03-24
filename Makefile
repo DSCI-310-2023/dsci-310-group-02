@@ -5,13 +5,16 @@
 all: results/count_plot.png ggpairs_plot.png k_plot.png
 
 #Loading the dataset
-data/winequality-white.csv: R/data_load.R
-  Rscript R/data_load.R
+data/winequality-white.csv:
+	R/data_load.R
+	Rscript R/data_load.R
 
 #Splitting and training the data
-data/training_data.csv tests/testthat/test-data_split.R: data/data/winequality-white.csv R/data_split.R
-  Rscript data_split.R
-  
+data/training_data.csv tests/testthat/test-data_split.R:
+	data/data/winequality-white.csv
+	R/data_split.R
+	Rscript data_split.R
+
 #Fitting the data for the predict model
 
 #Graphing the data
