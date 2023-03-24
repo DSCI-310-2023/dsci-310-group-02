@@ -1,28 +1,23 @@
-#' Plotting the data
-#'
-#' Creates a bar chart for the count of wine quality,
-#' and also a ggpairs plot for the correlation between
-#' all predictors. 
-#' Saves the plot as a png.
-#'
-#' @param file_path The cleaned data in csv file
-#' 
-#' @return A bar chart and a ggpairs plot
-#' 
-#' @export count_plot.png&ggpairs_plot.png
-#' 
-#' @examples
-#' count_plot("../data/cleaned_data.csv")
-#' ggpairs_plot("../data/cleaned_data.csv")
+"
+Create eda plots and ggpairs plots for the cleaned data.
+Save the plots as png files.
+
+Usage: R/data_plot.R --input=<input> --out_dir=<out_dir>
+
+Options:
+--input=<input>       Path (including filename) to cleaned data 
+--out_dir=<out_dir>   Path to directory where the training and test data should be written
+" -> doc
 
 library(dplyr)
 library(ggplot2)
 library(GGally)
+library(docopt)
 
-# create a bar chart for the count of wine quality
-count_plot <- function(file_path){
-  # load data
-  c_data <- read_csv(file_path)
+opt <- docopt(doc)
+main <- function(input, out_dir){
+  # create a bar chart
+  c_data <- read.csv(input)
   c_data_df <- as.data.frame(c_data)
 
   options(repr.plot.width = 12, repr.plot.height = 8)
@@ -40,18 +35,10 @@ count_plot <- function(file_path){
     paste0("../results", "/count_plot.png"), 
     quality_distribution
   )
-  # show the plot
-  quality_distribution
-}
 
-# create a ggpairs plot
-ggpairs_plot <- function(file_path){
-  # load data
-  c_data <- read_csv(file_path)
-  c_data_df <- as.data.frame(c_data)
-
-  pairs <- ggpairs(c_data_df) +
-    theme(text = element_text(size = 8))
+  # create a ggpairs plot
+    pairs <- ggpairs(c_data_df) +
+      theme(text = element_text(size = 8))
   
   # save the plot
   ggsave(
@@ -59,3 +46,5 @@ ggpairs_plot <- function(file_path){
     pairs
   )
 }
+
+main(opt[["--input"]], opt[["--out_dir"]])
