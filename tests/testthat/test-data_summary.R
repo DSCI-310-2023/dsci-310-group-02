@@ -1,17 +1,20 @@
-# Author: Kashish Joshipura
-# Date: 10-03-2023
+# Author: Eric HUANG
+# Date: 12-03-2023
 
-source("../../R/data_summary.R")
+source("../R/data_summary.R")
 
-#importing the library testthat
 library(testthat)
 
-test_that("data_summary returns the correct median", {
-  
-  # Call function with data file path
-  actual_output <- data_summary("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv","alcohol")
-  
-  # Test that actual output matches expected output
-  expect_equal(actual_output$median, 10.2)
-  
+test_that("data_sum returns the identical summary of the specified data frame", {
+  expect_identical(data_sum("https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv"), datasum)
 })
+
+test_that("data_sum returns the identical summary of the another specified data frame", {
+  expect_identical(data_sum("https://projects.fivethirtyeight.com/polls-page/president_primary_polls.csv"), datasum2)
+})
+
+test_that("data_sum returns nothing when given an empty dataframe", {
+  expect_identical(typeof(data_sum("")), typeof("character"))
+})
+
+
