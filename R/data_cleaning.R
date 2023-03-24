@@ -31,7 +31,7 @@ main <- function(input, out_dir){
   raw_data_df <- 
     raw_data_df %>%
     mutate(
-      quality_tier = case_when(
+      quality = case_when(
       quality >= 7 ~ "Great",
       quality >= 5 & quality < 7 ~ "Avergae",
       quality >= 1 & quality < 5 ~ "Unsatisfactory",
