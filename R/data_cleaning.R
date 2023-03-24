@@ -13,8 +13,10 @@ Options:
 " -> doc
 
 library(tidyverse)
+library(tidymodels)
 library(docopt)
 library(dplyr)
+set.seed(123)
 
 opt <- docopt(doc)
 main <- function(input, out_dir){
@@ -35,6 +37,15 @@ main <- function(input, out_dir){
   
   # write the cleaned data to file for plotting
   write_csv(raw_data_df, paste0(out_dir, "/cleaned_data.csv"))
+  
+  # split into training and test data
+  split <- initial_split(raw_data_df, prop = 0.75, strata = quality)
+  training_data <- training(split)
+  test_data <- testing(split)
+  
+  # write the training and test data to files
+  write_csv(training_data, paste0(out_dir, "/training_data.csv"))
+  write_csv(test_data, paste0(out_dir, "/test_data.csv"))
 }
 
 main(opt[["--input"]], opt[["--out_dir"]])
