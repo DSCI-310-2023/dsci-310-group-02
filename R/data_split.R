@@ -23,6 +23,6 @@ splitdata <- function(file_path) {
     data = read_delim(file_path, ";")
     split <- initial_split(data, prop = 0.75, strata = quality)
     training <- training(split)
-    return(training)
+    return(head(training))
 }
 

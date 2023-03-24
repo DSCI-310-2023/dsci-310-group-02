@@ -50,14 +50,12 @@ ggpairs_plot <- function(file_path){
   c_data <- read_csv(file_path)
   c_data_df <- as.data.frame(c_data)
 
-  options(repr.plot.width = 12, repr.plot.height = 8)
-  pairs <- ggpairs(c_data_df)
+  pairs <- ggpairs(c_data_df) +
+    theme(text = element_text(size = 8))
   
   # save the plot
   ggsave(
     paste0("../results",  "/ggpairs_plot.png"), 
     pairs
   )
-  # show the plot
-  pairs
 }
