@@ -20,7 +20,7 @@ set.seed(123)
 
 opt <- docopt(doc)
 main <- function(input, out_dir){
-  raw_data <- read.csv(input, sep=";")
+  raw_data <- read.csv(input, sep=",")
   raw_data_df <- as.data.frame(raw_data)
   
   # Categorize the quality
