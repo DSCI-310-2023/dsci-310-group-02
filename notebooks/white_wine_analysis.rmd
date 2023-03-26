@@ -16,8 +16,6 @@ bibliography: references.bib
 nocite: "@*"
 ---
 
-
-
 ```{r, echo=FALSE, message=FALSE}
 library(tidyverse)
 library(repr)
@@ -26,29 +24,44 @@ library(kknn)
 
 library("ggplot2")                     
 library("GGally")
-
-
-source("../R/data_summary.R")
-
-source("../R/data_plot.R")
-
 ```
 
 # Introduction
 
-In this project, we attempt to build a classification model using the k-nearest neighbor algorithm to classify and predict white wine. This model can help the wine rating association or connoisseur understand the relationship between each variable such as acidity, density and etc. Therefore, they are able to determine the quality of wine more accurately or less objectively. While the average wine enjoyer wouldn't know much about wine other than it is made from grapes and fermented. Therefore our group decided to dig deeper into the production of wine and how each factor contributes to its quality. In this project we would like to see which factors plays the most significant role in terms of wine quality and how significant they are. By using k-nearest neighbor we are able to group each variables to test each of their correlation with the quality itself. We will also be using cross validation to confirm our prediction results with our training data to verify the authenticity of our model. We hope that this project is able to help you get a better insight our your "average" wine that you are drinking.
+In this project, we attempt to build a classification model using the
+k-nearest neighbor algorithm to classify and predict white wine. This
+model can help the wine rating association or connoisseur understand the
+relationship between each variable such as acidity, density and etc.
+Therefore, they are able to determine the quality of wine more
+accurately or less objectively. While the average wine enjoyer wouldn't
+know much about wine other than it is made from grapes and fermented.
+Therefore our group decided to dig deeper into the production of wine
+and how each factor contributes to its quality. In this project we would
+like to see which factors plays the most significant role in terms of
+wine quality and how significant they are. By using k-nearest neighbor
+we are able to group each variables to test each of their correlation
+with the quality itself. We will also be using cross validation to
+confirm our prediction results with our training data to verify the
+authenticity of our model. We hope that this project is able to help you
+get a better insight our your "average" wine that you are drinking.
 
-The question that the project wants to answer is How does each factor affect the overall wine quality? The dataset that we will be using for answering this question is the 12 characteristics of the Portuguese "Vinho Verde" wine collected during Oct., 2009 from Wine Quality Data Set [@wine_data_set]. This data consists of all chemical factors that makes up a wine such as pH, alcohol percentage, density, sulfur dioxide and etc.
+The question that the project wants to answer is How does each factor
+affect the overall wine quality? The dataset that we will be using for
+answering this question is the 12 characteristics of the Portuguese
+"Vinho Verde" wine collected during Oct., 2009 from Wine Quality Data
+Set [@wine_data_set]. This data consists of all chemical factors that
+makes up a wine such as pH, alcohol percentage, density, sulfur dioxide
+and etc.
 
 # Method
 
-We first load the required libraries like tidyverse [@tidyverse], knitr [@knitr] used for classification of the data
+We first load the required libraries like tidyverse [@tidyverse], knitr
+[@knitr] used for classification of the data
 
 ## Reading in the white wine dataset from Jupyter
 
 ```{r,echo=FALSE, message=FALSE}
-url <- "https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/winequality-white.csv"
-data = read_delim(url, ";")
+data <- read.csv('../data/raw_data.csv', header = TRUE, ',')
 knitr::kable(head(data), caption = "Data")
 ```
 
@@ -63,199 +76,161 @@ Data cleaning was performed as following steps:
 3.  Set each column as a double expect quality column
 
 ```{r, echo=FALSE, message=FALSE}
-data <- data_cleaning(url)
+cleaned_data <- read.csv('../data/cleaned_data.csv', header=TRUE, ',')
 
-knitr::kable(table(data$quality), caption = "Data quality Distribution")
+knitr::kable(table(cleaned_data$quality), caption = "Data quality Distribution")
 
-knitr::kable(head(data), caption = "Cleaned Data")
+knitr::kable(head(cleaned_data), caption = "Cleaned Data")
 ```
 
 # Analysis
 
 ## Summary of the Data
-Let's study the mean, median and standard deviation of the columns : 
 
-- alcohol
+Let's study the mean, median and standard deviation of the columns :
+
+-   alcohol
+
 ```{r, echo=FALSE, message=FALSE}
-alcohol_summary <- data_summary(url,"alcohol")
-knitr::kable(alcohol_summary, caption = "Alcohol Summary")
+data_summary <- read.csv('../results/summary_data.csv', header = TRUE, check.names = FALSE)
+knitr::kable(data_summary$alcohol, caption = "Alcohol Summary")
 ```
 
-- sulphates
+-   sulphates
+
 ```{r, echo=FALSE, message=FALSE}
-sulphates_summary <- data_summary(url,"sulphates")
-knitr::kable(sulphates_summary, caption = "Sulphates Summary")
+knitr::kable(data_summary$sulphates, caption = "Sulphates Summary")
 ```
 
-- chlorides
+-   chlorides
+
 ```{r, echo=FALSE, message=FALSE}
-chlorides_summary <- data_summary(url,"chlorides")
-knitr::kable(chlorides_summary, caption = "Chlorides Summary")
+knitr::kable(data_summary$chlorides, caption = "Chlorides Summary")
 ```
 
 ## Counting and graphing all the different quality of wines
 
-Here we visualize the distribution of the wine and their quality (average, great, unsatisfactory)
+Here we visualize the distribution of the wine and their quality
+(average, great, unsatisfactory)
+
 ```{r, echo=FALSE, message=FALSE,fig.cap=" Total Count of White Wine Quality"}
-c_data_path <- "../data/cleaned_data.csv"
 knitr::include_graphics("../results/count_plot.png")
 ```
 
-It seems that in general most of the wine is considered average, while it is considered more great than it being unsatisfactory.
+It seems that in general most of the wine is considered average, while
+it is considered more great than it being unsatisfactory.
 
 ## Looking at the correlation between all predictors and the predicted
 
 ```{r, echo=FALSE, message=FALSE,fig.cap="Correlation plot of the predictor variables"}
-ggpairs_plot(c_data_path)
 knitr::include_graphics("../results/ggpairs_plot.png")
-    
 ```
 
 ## Splitting a training and testing data set and creating a recipe for it
 
-Now we split the data into training and testing,data splitting is typically done to avoid overfitting.
-
+Now we split the data into training and testing,data splitting is
+typically done to avoid overfitting.
 
 Our training data :
 
 ```{r, echo=FALSE, message=FALSE}
-set.seed(5678)
-
-
 #training
-training_data <- data.split(url)
-
+training_data <- read.csv('../data/training_data.csv', header = TRUE, ',')
 
 # testing data
-split <- initial_split(data, prop = 0.75, strata = quality)
-testing <- testing(split)
-
+testing <- read.csv('../data/test_data.csv', header = TRUE, ',')
 
 knitr::kable(head(training_data), caption = "Training data Table")
 ```
 
-We will now generate a recipe in order to center and scale the data, we do this so that a predictor does not have a higher effect over the other just because of their high values.
-
-```{r, echo=FALSE, message=FALSE}
-set.seed(5678)
-recipe <- recipe(quality ~ . , data = data)%>%
-    step_center(all_predictors()) %>%
-    step_scale(all_predictors())
-     
-```
+We will now generate a recipe in order to center and scale the data, we
+do this so that a predictor does not have a higher effect over the other
+just because of their high values.
 
 ## Making a 10-fold cross validation for wine quality training data set
 
-We use cross-folding (K-folds cross validation) because it ensures that every observation from the original dataset has the chance of appearing in training and test set.
-```{r, echo=FALSE, message=FALSE}
-set.seed(5678)
-
-vfold <- vfold_cv(data, v = 10, strata = quality)
-knn_tune <- nearest_neighbor(weight_func = "rectangular", neighbors = tune()) %>%
-    set_engine("kknn") %>%
-    set_mode("classification")
-
-```
+We use cross-folding (K-folds cross validation) because it ensures that
+every observation from the original dataset has the chance of appearing
+in training and test set.
 
 ## Setting up the workflow for the recipe and knn fold
 
-We use a workflow because it can help to ensure that the data is properly preprocessed, the model is trained and evaluated using the same parameters and metrics
+We use a workflow because it can help to ensure that the data is
+properly preprocessed, the model is trained and evaluated using the same
+parameters and metrics
 
-```{r, echo=FALSE, message=FALSE}
-set.seed(5678)
-knn_results <- workflow() %>%
-    add_recipe(recipe) %>%
-    add_model(knn_tune) %>%
-    tune_grid(resamples = vfold, grid = 20) %>%
-    collect_metrics()
- 
-```
+## Graphing the accuracy and the KNN
 
-## Graphing the accuray and the KNN
-
-We can also visualize the K-value selection process in the form of a line graph with accuracy on the y-axis vs. the k-value on the x-axis. Note that accuracy is at its maximum when k = 1 (given the high randomness of this data set, this value will vary greatly if the random seed is changed compared to a real-world data set).
+We can also visualize the K-value selection process in the form of a
+line graph with accuracy on the y-axis vs. the k-value on the x-axis.
+Note that accuracy is at its maximum when k = 1 (given the high
+randomness of this data set, this value will vary greatly if the random
+seed is changed compared to a real-world data set).
 
 ```{r, echo=FALSE, message=FALSE,fig.cap="The relationship between accuracy and the number of neighbors"}
-set.seed(5678)
-
-accuracies <- knn_results %>% 
-    filter(.metric == "accuracy")
-
-cross_plot <- ggplot(accuracies, aes(x = neighbors, y = mean))+
-    geom_point() +
-    geom_line() +
-    labs(x = "Neighbors", y = "Accuracy", title = "Accuracy Estimate vs KNN") + 
-    theme(text = element_text(size = 20)) 
 knitr::include_graphics("../results/k_plot.png")
-```
-
-
-## Finding the most accurate K value
-
-```{r, echo=FALSE, message=FALSE}
-
-accurate_k <-  accuracies %>% filter(mean == max(mean)) %>% slice(1)
-
-
-k <- accurate_k %>% pull(neighbors)
-
-knitr::kable(accurate_k, caption = "The neighbor wiht the highest classification accuracy and its
-error on the test data")
 ```
 
 ## Using the most accurate K value to then build our Classification Model
 
 We will then generate a new K-nearest neighbors model using K = 1.
 
-```{r, echo=FALSE, message=FALSE}
-set.seed(5678)
-
-spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k) %>%
-    set_engine("kknn") %>%
-    set_mode("classification")
-
-
-fit <- workflow() %>%
-    add_recipe(recipe) %>%
-    add_model(spec) %>%
-    fit(data = data)
- 
+```{r}
+class_model <- readRDS('../results/final_model.rds')
+class_model
 ```
 
 ## Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix
 
-Then, we can put the recipe generated earlier together with our new model in the workflow() function and fit it to our training data set. Our classification model is now trained and complete!
+Then, we can put the recipe generated earlier together with our new
+model in the workflow() function and fit it to our training data set.
+Our classification model is now trained and complete!
 
 ```{r, echo=FALSE, message=FALSE}
-set.seed(5678)
-
-prediction <- predict(fit, testing) %>%
-    bind_cols(testing) 
-# mnist_predictions
-
-mnist_metrics <- prediction %>%
-    metrics(truth = quality, estimate = .pred_class) 
-
-
-conf_mat <- prediction %>%
-    conf_mat(truth = quality, estimate = .pred_class) 
-
-
-knitr::kable(mnist_metrics, caption = "Our prediction using K-nearest neighbour classification")
-knitr::kable(conf_mat$table, caption = "Confusion Matrix for our prediction")
+conf_mat <- readRDS('../results/final_model_quality.rds')
+conf_mat
 ```
 
 # Results
 
-Data was split into 75% training and 25% testing sets. The relationship between predictor variables(physicochemical varialbe) and response variable listed in Figure 2 was visualitzed to evaluate the utility for modelling. The result showed that there was no evidence of having strong relationship between them was omitted from modeling. We first perform a 10-fold cross validation test. We then created a workflow based on the cross validation and recipe that we made.
+Data was split into 75% training and 25% testing sets. The relationship
+between predictor variables(physicochemical varialbe) and response
+variable listed in Figure 2 was visualitzed to evaluate the utility for
+modelling. The result showed that there was no evidence of having strong
+relationship between them was omitted from modeling. We first perform a
+10-fold cross validation test. We then created a workflow based on the
+cross validation and recipe that we made.
 
-
-After using our KNN Classification, we figured out that our best k-neighbour would be 1 as the result shown in Figure 3 and Table 2. Then we use the best_k to predict our accuracy and present it through a confusion matrix in Table 3. We got that the estimate to be 1 exactly. We also found that the standard error for our best k was very low: 0.00466. This means that our prediction was very accurate when testing our prediction data.
+After using our KNN Classification, we figured out that our best
+k-neighbour would be 1 as the result shown in Figure 3 and Table 2. Then
+we use the best_k to predict our accuracy and present it through a
+confusion matrix in Table 3. We got that the estimate to be 1 exactly.
+We also found that the standard error for our best k was very low:
+0.00466. This means that our prediction was very accurate when testing
+our prediction data.
 
 # Discussion
 
-When we got the esitmate of 1 that means that our data was exactly correlated and no error was made between the prediction when we are training and testing the data. This was not what we had expected because we thought more factors would be more contributing to the overall wine quality. Such findings can benefit the wine industry as it highlights the most important factor for making a good wine. Thus able to boost their own reputation and quality of wine and therefore attracting more customers. Also such findings is able to group certain wines together and provide more variations for the consumers. From this finding we can ask ourselves: Is it similar for other berverages or food? Should we consider more variables such as region and climate for each location of wine produced? Some conclusions can we drawn from the estimate. Our original data maybe under sampled or flawed so thus when we are performing our classification we would get over repeated values and thus having no error when training our data. On the other hand, when we trained our data the seed of our data ran the exact operations needed to have the perfert perdict however this is extremely unlikely. Moreover, since we are including all of the predictors that are used in this data therefore creating such a high estiamte for the predciton because the more the predictors we use the higher the R^2 and adjusted R^2 we get from the values.
+When we got the esitmate of 1 that means that our data was exactly
+correlated and no error was made between the prediction when we are
+training and testing the data. This was not what we had expected because
+we thought more factors would be more contributing to the overall wine
+quality. Such findings can benefit the wine industry as it highlights
+the most important factor for making a good wine. Thus able to boost
+their own reputation and quality of wine and therefore attracting more
+customers. Also such findings is able to group certain wines together
+and provide more variations for the consumers. From this finding we can
+ask ourselves: Is it similar for other berverages or food? Should we
+consider more variables such as region and climate for each location of
+wine produced? Some conclusions can we drawn from the estimate. Our
+original data maybe under sampled or flawed so thus when we are
+performing our classification we would get over repeated values and thus
+having no error when training our data. On the other hand, when we
+trained our data the seed of our data ran the exact operations needed to
+have the perfert perdict however this is extremely unlikely. Moreover,
+since we are including all of the predictors that are used in this data
+therefore creating such a high estiamte for the predciton because the
+more the predictors we use the higher the R\^2 and adjusted R\^2 we get
+from the values.
 
 # References
-
-
