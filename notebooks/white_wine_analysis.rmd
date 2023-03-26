@@ -113,7 +113,7 @@ knitr::kable(data_summary$chlorides, caption = "Chlorides Summary")
 Here we visualize the distribution of the wine and their quality
 (average, great, unsatisfactory)
 
-```{r, echo=FALSE, message=FALSE,fig.cap=" Total Count of White Wine Quality"}
+```{r count-plot, echo=FALSE, message=FALSE,fig.cap=" Total Count of White Wine Quality"}
 knitr::include_graphics("../results/count_plot.png")
 ```
 
@@ -122,7 +122,7 @@ it is considered more great than it being unsatisfactory.
 
 ## Looking at the correlation between all predictors and the predicted
 
-```{r, echo=FALSE, message=FALSE,fig.cap="Correlation plot of the predictor variables"}
+```{r ggpairs-plot, echo=FALSE, message=FALSE,fig.cap="Correlation plot of the predictor variables"}
 knitr::include_graphics("../results/ggpairs_plot.png")
 ```
 
@@ -162,12 +162,12 @@ parameters and metrics
 ## Graphing the accuracy and the KNN
 
 We can also visualize the K-value selection process in the form of a
-line graph with accuracy on the y-axis vs. the k-value on the x-axis.
+line graph with accuracy on the y-axis vs. the k-value on the x-axis (see Figure \@ref(fig:k-plot)).
 Note that accuracy is at its maximum when k = 1 (given the high
 randomness of this data set, this value will vary greatly if the random
 seed is changed compared to a real-world data set).
 
-```{r, echo=FALSE, message=FALSE,fig.cap="The relationship between accuracy and the number of neighbors"}
+```{r k-plot, echo=FALSE, message=FALSE,fig.cap="The relationship between accuracy and the number of neighbors"}
 knitr::include_graphics("../results/k_plot.png")
 ```
 
@@ -175,12 +175,12 @@ knitr::include_graphics("../results/k_plot.png")
 
 We will then generate a new K-nearest neighbors model using K = 1.
 
-```{r}
+```{r, echo=FALSE,message=FALSE}
 class_model <- readRDS('../results/final_model.rds')
 class_model
 ```
 
-## Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix
+## Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix {#sec:conf-mat}
 
 Then, we can put the recipe generated earlier together with our new
 model in the workflow() function and fit it to our training data set.
@@ -195,16 +195,16 @@ conf_mat
 
 Data was split into 75% training and 25% testing sets. The relationship
 between predictor variables(physicochemical varialbe) and response
-variable listed in Figure 2 was visualitzed to evaluate the utility for
+variable listed in Figure \@ref(fig:count-plot) was visualitzed to evaluate the utility for
 modelling. The result showed that there was no evidence of having strong
 relationship between them was omitted from modeling. We first perform a
 10-fold cross validation test. We then created a workflow based on the
 cross validation and recipe that we made.
 
 After using our KNN Classification, we figured out that our best
-k-neighbour would be 1 as the result shown in Figure 3 and Table 2. Then
+k-neighbour would be 1 as the result shown in Figure \@ref(fig:k-plot). Then
 we use the best_k to predict our accuracy and present it through a
-confusion matrix in Table 3. We got that the estimate to be 1 exactly.
+confusion matrix in Section \@ref(sec:conf-mat). We got that the estimate to be 1 exactly.
 We also found that the standard error for our best k was very low:
 0.00466. This means that our prediction was very accurate when testing
 our prediction data.
