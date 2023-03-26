@@ -4,7 +4,6 @@ author: 'DSCI 310 Group 02: Kashish Joshipura, Peter Lee, Eric Huang'
 date: "`r Sys.Date()`"
 output:
   bookdown::html_document2: default
-  bookdown::pdf_document2: default
 html_document:
     toc: true
 pdf_document:

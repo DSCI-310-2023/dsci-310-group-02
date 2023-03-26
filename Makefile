@@ -33,10 +33,10 @@ results/final_model_quality.rds: R/wine_test_results.R data/test_data.csv
 	Rscript R/wine_test_results.R --test=data/test_data.csv --out_dir=results
 
 # Rendering the report
-notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/white_wine_analysis.rmd
+notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/white_wine_analysis.rmd notebooks/references.bib
 	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', c('bookdown::html_document2', 'bookdown::pdf_document2'))"
 
 clean: 
 	rm -rf data
 	rm -rf results
-	rm -rf notebooks/white_wine_analysis.html notebooks/white_wine_analysis.rmd
+	rm -rf notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf
