@@ -17,14 +17,15 @@ We have also provided the [.ipynb](notebooks/white_wine_analysis.ipynb) and [.rm
 ## Run  
 We use the Docker container to make the computational environment for this project reproducible. There are two ways to run this project, as follows:
 
-### 1. Reproducibly execute the project non-interactively.  
 First, clone this GitHub repository by pasting the following block into the terminal.
 ```
 https://github.com/kashish1928/dsci-310-group-02.git  
 ```
 and then, in the terminal, navigate to the root of this project.
 
-Now, in order to run this type the following command in the terminal :
+### 1. Reproducibly execute the project non-interactively.  
+
+In order to run this type the following command in the terminal :
 ```
 docker run --rm -p 8787:8787 -e PASSWORD=00000  -v /$(pwd):/home/rstudio/project dsci-310-group-02
 ```
@@ -44,6 +45,24 @@ To be able to view the analysis file (white_wine_analysis.rmd) in a readable for
 - make sure it's set to a R Markdown file
 - select the knit option at the top in order to view our analysis
 
+
+### 2. Using Make
+Firstly, make sure that you are in the directory containing the [makefile](Makefile) in your terminal
+
+Next, run the command 
+```
+make
+```
+If you want to reset your work, run 
+```
+make clean
+```
+If the first command doesn't work then you can run 
+```
+make -B all
+```
+this will rebuild all targets regardless of whether they are up-to-date or not
+
 ## Dependencies  
 
 
@@ -62,5 +81,6 @@ To be able to view the analysis file (white_wine_analysis.rmd) in a readable for
 |devtools| 2.4.5|
 |bookdown|0.33|
 |docopt|0.7.1|
+|tinytex|0.44|
 ## License Information  
 The software provided in this project is offered under the [MIT](https://opensource.org/license/mit/) open source license and [CC-BY](https://creativecommons.org/about/cclicenses/#:~:text=CC%20BY%3A%20This%20license%20allows,license%20allows%20for%20commercial%20use.). See [LICENSE.md](LICENSE.md) for more information.
