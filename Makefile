@@ -10,11 +10,11 @@ data/raw_data.csv:	R/data_load.R
 
 # Pre-process the dataset
 data/cleaned_data.csv: R/data_cleaning.R data/raw_data.csv
-	Rscript data_cleaning.R --input=data/raw_data.csv --out_dir=data
+	Rscript R/data_cleaning.R --input=data/raw_data.csv --out_dir=data
 
 # Summarizing the dataset
 results/summary_data.csv: R/data_summary.R data/cleaned_data.csv
-	Rscript data_summary.R --input=data/cleaned_data.csv --out_dir=results
+	Rscript R/data_summary.R --input=data/cleaned_data.csv --out_dir=results
 
 # Graphing the data
 results/count_plot.png results/ggpairs_plot.png: R/data_plot.R data/cleaned_data.csv
@@ -39,4 +39,4 @@ notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/
 clean: 
 	rm -rf data
 	rm -rf results
-	rm -rf notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf
+	rm -rf notebooks/white_wine_analysis.html

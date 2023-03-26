@@ -86,25 +86,14 @@ knitr::kable(head(cleaned_data), caption = "Cleaned Data")
 
 ## Summary of the Data
 
-Let's study the mean, median and standard deviation of the columns :
+Let's study the summary statistics of each of the columns of our data.
 
--   alcohol
+This can help us find any otherwise hidden inconsistencies or trends in the data.
+
 
 ```{r, echo=FALSE, message=FALSE}
 data_summary <- read.csv('../results/summary_data.csv', header = TRUE, check.names = FALSE)
-knitr::kable(data_summary$alcohol, caption = "Alcohol Summary")
-```
-
--   sulphates
-
-```{r, echo=FALSE, message=FALSE}
-knitr::kable(data_summary$sulphates, caption = "Sulphates Summary")
-```
-
--   chlorides
-
-```{r, echo=FALSE, message=FALSE}
-knitr::kable(data_summary$chlorides, caption = "Chlorides Summary")
+knitr::kable(data_summary, caption = "Data Summary")
 ```
 
 ## Counting and graphing all the different quality of wines

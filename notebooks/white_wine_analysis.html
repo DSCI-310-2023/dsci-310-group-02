@@ -676,31 +676,135 @@ them as a factor for the dataset<br></li>
 <h1><span class="header-section-number">3</span> Analysis</h1>
 <div id="summary-of-the-data" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Summary of the Data</h2>
-<p>Let’s study the mean, median and standard deviation of the columns :</p>
-<ul>
-<li>alcohol</li>
-</ul>
-<p>Table: (#tab:unnamed-chunk-4)Alcohol Summary</p>
-<p>||
-||
-||
-||</p>
-<ul>
-<li>sulphates</li>
-</ul>
-<p>Table: (#tab:unnamed-chunk-5)Sulphates Summary</p>
-<p>||
-||
-||
-||</p>
-<ul>
-<li>chlorides</li>
-</ul>
-<p>Table: (#tab:unnamed-chunk-6)Chlorides Summary</p>
-<p>||
-||
-||
-||</p>
+<p>Let’s study the summary statistics of each of the columns of our data.</p>
+<p>This can help us find any otherwise hidden inconsistencies or trends in the data.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 3.1: </span>Data Summary</caption>
+<colgroup>
+<col width="1%" />
+<col width="7%" />
+<col width="8%" />
+<col width="7%" />
+<col width="7%" />
+<col width="8%" />
+<col width="10%" />
+<col width="10%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">fixed.acidity</th>
+<th align="left">volatile.acidity</th>
+<th align="left">citric.acid</th>
+<th align="left">residual.sugar</th>
+<th align="left">chlorides</th>
+<th align="left">free.sulfur.dioxide</th>
+<th align="left">total.sulfur.dioxide</th>
+<th align="left">density</th>
+<th align="left">pH</th>
+<th align="left">sulphates</th>
+<th align="left">alcohol</th>
+<th align="left">quality</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">Min. : 3.800</td>
+<td align="left">Min. :0.0800</td>
+<td align="left">Min. :0.0000</td>
+<td align="left">Min. : 0.600</td>
+<td align="left">Min. :0.00900</td>
+<td align="left">Min. : 2.00</td>
+<td align="left">Min. : 9.0</td>
+<td align="left">Min. :0.9871</td>
+<td align="left">Min. :2.720</td>
+<td align="left">Min. :0.2200</td>
+<td align="left">Min. : 8.00</td>
+<td align="left">Length:4898</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">1st Qu.: 6.300</td>
+<td align="left">1st Qu.:0.2100</td>
+<td align="left">1st Qu.:0.2700</td>
+<td align="left">1st Qu.: 1.700</td>
+<td align="left">1st Qu.:0.03600</td>
+<td align="left">1st Qu.: 23.00</td>
+<td align="left">1st Qu.:108.0</td>
+<td align="left">1st Qu.:0.9917</td>
+<td align="left">1st Qu.:3.090</td>
+<td align="left">1st Qu.:0.4100</td>
+<td align="left">1st Qu.: 9.50</td>
+<td align="left">Class :character</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">Median : 6.800</td>
+<td align="left">Median :0.2600</td>
+<td align="left">Median :0.3200</td>
+<td align="left">Median : 5.200</td>
+<td align="left">Median :0.04300</td>
+<td align="left">Median : 34.00</td>
+<td align="left">Median :134.0</td>
+<td align="left">Median :0.9937</td>
+<td align="left">Median :3.180</td>
+<td align="left">Median :0.4700</td>
+<td align="left">Median :10.40</td>
+<td align="left">Mode :character</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Mean : 6.855</td>
+<td align="left">Mean :0.2782</td>
+<td align="left">Mean :0.3342</td>
+<td align="left">Mean : 6.391</td>
+<td align="left">Mean :0.04577</td>
+<td align="left">Mean : 35.31</td>
+<td align="left">Mean :138.4</td>
+<td align="left">Mean :0.9940</td>
+<td align="left">Mean :3.188</td>
+<td align="left">Mean :0.4898</td>
+<td align="left">Mean :10.51</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">3rd Qu.: 7.300</td>
+<td align="left">3rd Qu.:0.3200</td>
+<td align="left">3rd Qu.:0.3900</td>
+<td align="left">3rd Qu.: 9.900</td>
+<td align="left">3rd Qu.:0.05000</td>
+<td align="left">3rd Qu.: 46.00</td>
+<td align="left">3rd Qu.:167.0</td>
+<td align="left">3rd Qu.:0.9961</td>
+<td align="left">3rd Qu.:3.280</td>
+<td align="left">3rd Qu.:0.5500</td>
+<td align="left">3rd Qu.:11.40</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">Max. :14.200</td>
+<td align="left">Max. :1.1000</td>
+<td align="left">Max. :1.6600</td>
+<td align="left">Max. :65.800</td>
+<td align="left">Max. :0.34600</td>
+<td align="left">Max. :289.00</td>
+<td align="left">Max. :440.0</td>
+<td align="left">Max. :1.0390</td>
+<td align="left">Max. :3.820</td>
+<td align="left">Max. :1.0800</td>
+<td align="left">Max. :14.20</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="counting-and-graphing-all-the-different-quality-of-wines" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Counting and graphing all the different quality of wines</h2>
@@ -730,7 +834,7 @@ Figure 3.2: Correlation plot of the predictor variables
 typically done to avoid overfitting.</p>
 <p>Our training data :</p>
 <table>
-<caption><span id="tab:unnamed-chunk-7">Table 3.4: </span>Training data Table</caption>
+<caption><span id="tab:unnamed-chunk-5">Table 3.2: </span>Training data Table</caption>
 <colgroup>
 <col width="9%" />
 <col width="11%" />
