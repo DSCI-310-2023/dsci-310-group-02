@@ -12,6 +12,10 @@ data/raw_data.csv:	R/data_load.R
 data/cleaned_data.csv: R/data_cleaning.R data/raw_data.csv
 	Rscript data_cleaning.R --input=data/raw_data.csv --out_dir=data
 
+# Summarizing the dataset
+results/summary_data.csv: R/data_summary.R data/cleaned_data.csv
+	Rscript data_summary.R --input=data/cleaned_data.csv --out_dir=results
+
 # Graphing the data
 results/count_plot.png results/ggpairs_plot.png: R/data_plot.R data/cleaned_data.csv
 	Rscript R/data_plot.R --input=data/cleaned_data.csv --out_dir=results
