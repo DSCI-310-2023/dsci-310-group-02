@@ -114,6 +114,10 @@ it is considered more great than it being unsatisfactory.
 knitr::include_graphics("../results/ggpairs_plot.png")
 ```
 
+From the ggpairs plot, we can find there is a strong positive correlation between density and residual sugar and a strong negative correlation between density and 
+alcohol. But since the majority of the correlation between variables is not 
+significant and the KNN classification we're about to perform is a non-parametric method, we'll keep these variables in the following model-creating procedures.
+
 ## Splitting a training and testing data set and creating a recipe for it
 
 Now we split the data into training and testing,data splitting is
@@ -195,8 +199,8 @@ our prediction data.
 
 # Discussion
 
-When we got the esitmate of 1 that means that our data was exactly
-correlated and no error was made between the prediction when we are
+When we got the estimate of 1, which the number of best k-nearest neighbours 
+that means that our data was exactly correlated and no error was made between the prediction when we are
 training and testing the data. This was not what we had expected because
 we thought more factors would be more contributing to the overall wine
 quality. Such findings can benefit the wine industry as it highlights
@@ -214,7 +218,7 @@ trained our data the seed of our data ran the exact operations needed to
 have the perfert perdict however this is extremely unlikely. Moreover,
 since we are including all of the predictors that are used in this data
 therefore creating such a high estiamte for the predciton because the
-more the predictors we use the higher the R\^2 and adjusted R\^2 we get
+more the predictors we use the higher the $$R^2$$ and adjusted $$R^2$$ we get
 from the values.
 
 # References
