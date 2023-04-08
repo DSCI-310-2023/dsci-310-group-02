@@ -985,25 +985,6 @@ Figure 3.3: The relationship between accuracy and the number of neighbors
 <div id="using-the-most-accurate-k-value-to-then-build-our-classification-model" class="section level2" number="3.8">
 <h2><span class="header-section-number">3.8</span> Using the most accurate K value to then build our Classification Model</h2>
 <p>We will then generate a new K-nearest neighbors model using K = 1.</p>
-<pre><code>## ══ Workflow [trained] ══════════════════════════════════════════════════════════
-## Preprocessor: Recipe
-## Model: nearest_neighbor()
-## 
-## ── Preprocessor ────────────────────────────────────────────────────────────────
-## 2 Recipe Steps
-## 
-## • step_center()
-## • step_scale()
-## 
-## ── Model ───────────────────────────────────────────────────────────────────────
-## 
-## Call:
-## kknn::train.kknn(formula = ..y ~ ., data = data, ks = min_rows(2L,     data, 5), kernel = ~&quot;rectangular&quot;)
-## 
-## Type of response variable: nominal
-## Minimal misclassification: 0.1998911
-## Best kernel: rectangular
-## Best k: 2</code></pre>
 </div>
 <div id="sec:conf-mat" class="section level2" number="3.9">
 <h2><span class="header-section-number">3.9</span> Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix</h2>

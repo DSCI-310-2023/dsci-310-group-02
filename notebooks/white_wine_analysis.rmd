@@ -161,16 +161,12 @@ seed is changed compared to a real-world data set).
 
 ```{r k-plot, echo=FALSE, message=FALSE,fig.cap="The relationship between accuracy and the number of neighbors"}
 knitr::include_graphics("../results/k_plot.png")
+accurate_sd <- 0.00466
 ```
 
 ## Using the most accurate K value to then build our Classification Model
 
 We will then generate a new K-nearest neighbors model using K = 1.
-
-```{r, echo=FALSE,message=FALSE}
-class_model <- readRDS('../results/final_model.rds')
-class_model
-```
 
 ## Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix {#sec:conf-mat}
 
@@ -198,7 +194,7 @@ k-neighbour would be 1 as the result shown in Figure \@ref(fig:k-plot). Then
 we use the best_k to predict our accuracy and present it through a
 confusion matrix in Section \@ref(sec:conf-mat). We got that the estimate to be 1 exactly.
 We also found that the standard error for our best k was very low:
-0.00466. This means that our prediction was very accurate when testing
+`r accurate_sd`. This means that our prediction was very accurate when testing
 our prediction data.
 
 # Discussion
