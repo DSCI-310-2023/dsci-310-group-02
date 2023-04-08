@@ -126,6 +126,10 @@ it is considered more great than it being unsatisfactory.
 knitr::include_graphics("../results/ggpairs_plot.png")
 ```
 
+From the ggpairs plot, we can find there is a strong positive correlation between density and residual sugar and a strong negative correlation between density and 
+alcohol. But since the majority of the correlation between variables is not 
+significant and the KNN classification we're about to perform is a non-parametric method, we'll keep these variables in the following model-creating procedures.
+
 ## Splitting a training and testing data set and creating a recipe for it
 
 Now we split the data into training and testing,data splitting is
