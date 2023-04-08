@@ -36,6 +36,13 @@ results/final_model_quality.rds: R/wine_test_results.R data/test_data.csv
 notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/white_wine_analysis.rmd notebooks/references.bib
 	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', 'bookdown::html_document2')"
 
+#generate html report of the analysis
+.PHONY: report
+report: 
+	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', 'bookdown::html_document2')"
+
+# Delete data,plots and html version of the analysis
+.PHONY: clean
 clean: 
 	rm -rf data
 	rm -rf results
