@@ -44,6 +44,6 @@ report:
 # Delete data,plots and html version of the analysis
 .PHONY: clean
 clean: 
-	rm -rf data
-	rm -rf results
+	rm -rf data/*.csv
+	rm -rf results/*.csv
 	rm -rf notebooks/white_wine_analysis.html
