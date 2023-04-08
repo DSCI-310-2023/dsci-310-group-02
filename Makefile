@@ -2,8 +2,16 @@
 # Author: Peter, Eric and Kashish
 # Date: March 24th, 2023
 
-all: results/final_model.rds results/count_plot.png results/ggpairs_plot.png results/k_plot.png
+all: 
+	make clean
+	make preliminary-analysis
+	make actual-analysis
+	make report
 
+
+
+.PHONY: preliminary-analysis
+preliminary-analysis: data/raw_data.csv data/cleaned_data.csv results/summary_data.csv results/count_plot.png results/ggpairs_plot.png data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R
 # Loading the dataset
 data/raw_data.csv:	R/data_load.R
 	Rscript R/data_load.R --url=https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/winequality-white.csv --out_dir=data
@@ -24,6 +32,9 @@ results/count_plot.png results/ggpairs_plot.png: R/data_plot.R data/cleaned_data
 data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R: R/data_split.R data/cleaned_data.csv
 	Rscript R/data_split.R --input=data/cleaned_data.csv --out_dir=data
 
+
+.PHONY: actual-analysis
+actual-analysis: results/final_model.rds results/final_model_quality.rds notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf
 # Fitting the data for the predict model
 results/final_model.rds: R/fit_wine_predict_model.R data/training_data.csv
 	Rscript R/fit_wine_predict_model.R --train=data/training_data.csv --out_dir=results
