@@ -3,6 +3,7 @@
 # Date: March 24th, 2023
 
 all: 
+
 	make clean
 	make preliminary-analysis
 	make actual-analysis
@@ -34,7 +35,8 @@ data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R: R/da
 
 
 .PHONY: actual-analysis
-actual-analysis: results/final_model.rds results/final_model_quality.rds notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf
+actual-analysis: results/k_plot.png results/final_model.rds results/final_model_quality.rds
+
 # Fitting the data for the predict model
 results/final_model.rds: R/fit_wine_predict_model.R data/training_data.csv
 	Rscript R/fit_wine_predict_model.R --train=data/training_data.csv --out_dir=results
@@ -43,9 +45,6 @@ results/final_model.rds: R/fit_wine_predict_model.R data/training_data.csv
 results/final_model_quality.rds: R/wine_test_results.R data/test_data.csv
 	Rscript R/wine_test_results.R --test=data/test_data.csv --out_dir=results
 
-# Rendering the report
-notebooks/white_wine_analysis.html notebooks/white_wine_analysis.pdf: notebooks/white_wine_analysis.rmd notebooks/references.bib
-	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', 'bookdown::html_document2')"
 
 #generate html report of the analysis
 .PHONY: report
@@ -57,4 +56,7 @@ report:
 clean: 
 	rm -rf data/*.csv
 	rm -rf results/*.csv
+	rm -rf results/count_plot.png
+	rm -rf results/ggpairs_plot.png
+	rm -rf results/*.rds
 	rm -rf notebooks/white_wine_analysis.html
