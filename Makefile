@@ -5,17 +5,17 @@
 all: 
 
 	make clean
-	make preliminary-analysis
-	make actual-analysis
+	make analysis
 	make report
 
 
 
 .PHONY: preliminary-analysis
 preliminary-analysis: data/raw_data.csv data/cleaned_data.csv results/summary_data.csv results/count_plot.png results/ggpairs_plot.png data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R
+
 # Loading the dataset
 data/raw_data.csv:	R/data_load.R
-	Rscript R/data_load.R --url=https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/winequality-white.csv --out_dir=data
+	Rscript R/data_load.R --url=https://raw.githubusercontent.com/kashish1928/white_wine_dataset/main/winequality-white.csv --out_dir=data
 
 # Pre-process the dataset
 data/cleaned_data.csv: R/data_cleaning.R data/raw_data.csv
@@ -34,8 +34,8 @@ data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R: R/da
 	Rscript R/data_split.R --input=data/cleaned_data.csv --out_dir=data
 
 
-.PHONY: actual-analysis
-actual-analysis: results/k_plot.png results/final_model.rds results/final_model_quality.rds
+.PHONY: final-analysis
+final-analysis: results/k_plot.png results/final_model.rds results/final_model_quality.rds
 
 # Fitting the data for the predict model
 results/final_model.rds: R/fit_wine_predict_model.R data/training_data.csv
@@ -45,8 +45,13 @@ results/final_model.rds: R/fit_wine_predict_model.R data/training_data.csv
 results/final_model_quality.rds: R/wine_test_results.R data/test_data.csv
 	Rscript R/wine_test_results.R --test=data/test_data.csv --out_dir=results
 
+.PHONY: analysis
+analysis:
+	make preliminary-analysis
+	make final-analysis
 
-#generate html report of the analysis
+
+# Generate html report of the analysis
 .PHONY: report
 report: 
 	Rscript -e "rmarkdown::render('notebooks/white_wine_analysis.rmd', 'bookdown::html_document2')"

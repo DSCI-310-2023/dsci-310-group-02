@@ -49,19 +49,22 @@ To be able to view the analysis file (white_wine_analysis.rmd) in a readable for
 ### 2. Using Make
 Firstly, make sure that you are in the directory containing the [makefile](Makefile) in your terminal
 
-Next, run the command 
+Next, run this command if you want the analysis to run from the start
 ```
-make
+make all
 ```
 If you want to reset your work, run 
 ```
 make clean
 ```
-If the first command doesn't work then you can run 
+And if you want to run the analysis run 
 ```
-make -B all
+make analysis
 ```
-this will rebuild all targets regardless of whether they are up-to-date or not
+In order to render the report (HTML version) run 
+```
+make report
+```
 
 ## Dependencies  
 
