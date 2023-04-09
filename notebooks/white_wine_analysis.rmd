@@ -182,8 +182,8 @@ conf_mat
 # Results
 
 Data was split into 75% training and 25% testing sets. The relationship
-between predictor variables(physicochemical varialbe) and response
-variable listed in Figure \@ref(fig:count-plot) was visualitzed to evaluate the utility for
+between predictor variables(physicochemical variable) and response
+variable listed in Figure \@ref(fig:count-plot) was visualized to evaluate the utility for
 modelling. The result showed that there was no evidence of having strong
 relationship between them was omitted from modeling. We first perform a
 10-fold cross validation test. We then created a workflow based on the
@@ -218,7 +218,7 @@ trained our data the seed of our data ran the exact operations needed to
 have the perfert perdict however this is extremely unlikely. Moreover,
 since we are including all of the predictors that are used in this data
 therefore creating such a high estiamte for the predciton because the
-more the predictors we use the higher the $$R^2$$ and adjusted $$R^2$$ we get
+more the predictors we use the higher the $R^2$ and adjusted $R^2$ we get
 from the values.
 
 # References
