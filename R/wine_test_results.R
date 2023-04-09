@@ -7,7 +7,7 @@ Options:
 --train=<train>       Path (including filename) to test data
 --out_dir=<out_dir>   Path to directory where the plots should be saved
 " -> doc
-
+library(devtools)
 library(tidyverse)
 library(docopt)
 library(workflows)
@@ -34,3 +34,4 @@ main <- function(test, out_dir){
 }
 
 main(opt[["--test"]], opt[["--out_dir"]])
+
