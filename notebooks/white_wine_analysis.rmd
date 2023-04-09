@@ -182,8 +182,8 @@ conf_mat
 # Results
 
 Data was split into 75% training and 25% testing sets. The relationship
-between predictor variables(physicochemical varialbe) and response
-variable listed in Figure \@ref(fig:count-plot) was visualitzed to evaluate the utility for
+between predictor variables(physicochemical variable) and response
+variable listed in Figure \@ref(fig:count-plot) was visualized to evaluate the utility for
 modelling. The result showed that there was no evidence of having strong
 relationship between them was omitted from modeling. We first perform a
 10-fold cross validation test. We then created a workflow based on the
@@ -203,22 +203,24 @@ When we got the estimate of 1, which the number of best k-nearest neighbours
 that means that our data was exactly correlated and no error was made between the prediction when we are
 training and testing the data. This was not what we had expected because
 we thought more factors would be more contributing to the overall wine
-quality. Such findings can benefit the wine industry as it highlights
+quality. In addtion, we saw that there a clear imbalance in your dataset as there was a significant more amount of average than great or satisfactory
+in terms of Wine categories. Thus our model was heavily leaning towards the average wine category instead of having a more balanced wine quality model.
+Such findings can benefit the wine industry as it highlights
 the most important factor for making a good wine. Thus able to boost
 their own reputation and quality of wine and therefore attracting more
 customers. Also such findings is able to group certain wines together
 and provide more variations for the consumers. From this finding we can
-ask ourselves: Is it similar for other berverages or food? Should we
+ask ourselves: Is it similar for other beverages or food? Should we
 consider more variables such as region and climate for each location of
 wine produced? Some conclusions can we drawn from the estimate. Our
 original data maybe under sampled or flawed so thus when we are
 performing our classification we would get over repeated values and thus
 having no error when training our data. On the other hand, when we
 trained our data the seed of our data ran the exact operations needed to
-have the perfert perdict however this is extremely unlikely. Moreover,
+have the perfect predict however this is extremely unlikely. Moreover,
 since we are including all of the predictors that are used in this data
-therefore creating such a high estiamte for the predciton because the
-more the predictors we use the higher the $$R^2$$ and adjusted $$R^2$$ we get
+therefore creating such a high estimate for the prediction because the
+more the predictors we use the higher the $R^2$ and adjusted $R^2$ we get
 from the values.
 
 # References

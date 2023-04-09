@@ -32,3 +32,4 @@ main <- function(test, out_dir){
 }
 
 main(opt[["--test"]], opt[["--out_dir"]])
+
