@@ -27,7 +27,7 @@ and then, in the terminal, navigate to the root of this project.
 
 In order to run this type the following command in the terminal :
 ```
-docker run --rm -p 8787:8787 -e PASSWORD=00000  -v /$(pwd):/home/rstudio/project dsci-310-group-02
+docker run --rm -it -v "/${PWD}:/home/rstudio/project" -p 8787:8787 -e PASSWORD=00000 kashish1909/dsci-310-group-02:latest
 ```
 
 Then go to your preferred browser and navigate to
