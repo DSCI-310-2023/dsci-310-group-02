@@ -15,7 +15,7 @@ all:
 preliminary-analysis: data/raw_data.csv data/cleaned_data.csv results/summary_data.csv results/count_plot.png results/ggpairs_plot.png data/training_data.csv data/test_data.csv tests/testthat/test-data_split.R
 # Loading the dataset
 data/raw_data.csv:	R/data_load.R
-	Rscript R/data_load.R --url=https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/winequality-white.csv --out_dir=data
+	Rscript R/data_load.R --url=https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/winequality-white.csv --out_dir=data
 
 # Pre-process the dataset
 data/cleaned_data.csv: R/data_cleaning.R data/raw_data.csv
