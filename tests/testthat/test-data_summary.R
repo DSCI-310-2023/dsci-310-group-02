@@ -17,4 +17,6 @@ test_that("data_sum returns nothing when given an empty dataframe", {
   expect_identical(typeof(data_sum("")), typeof("character"))
 })
 
-
+test_that("data_sum returns nothing when given an empty dataframe", {
+  expect_warning(data_sum())
+})

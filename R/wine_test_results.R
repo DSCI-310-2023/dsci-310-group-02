@@ -29,7 +29,7 @@ main <- function(test, out_dir){
   test_df$quality <- as.factor(test_df$quality)
   
   # Assess model accuracy
-  conf_matrix <- conf_mat(data = test_df, truth = quality, estimate = pred) 
+  conf_matrix <- conf_mat(data = test_df, truth = quality, estimate = pred)
   saveRDS(conf_matrix, file = paste0(out_dir, "/final_model_quality.rds"))
 }
 
