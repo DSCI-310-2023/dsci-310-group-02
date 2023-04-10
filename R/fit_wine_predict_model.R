@@ -13,6 +13,7 @@ library(tidyverse)
 library(tidymodels)
 library(kknn)
 library(docopt)
+library(wineclassify)
 set.seed(5678)
 
 opt <- docopt(doc)
