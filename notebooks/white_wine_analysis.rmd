@@ -128,7 +128,7 @@ significant and the KNN classification we're about to perform is a non-parametri
 Now we split the data into training and testing,data splitting is
 typically done to avoid overfitting.
 
-Our training data :
+Our training data:
 
 ```{r, echo=FALSE, message=FALSE}
 #training
