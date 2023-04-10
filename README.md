@@ -24,6 +24,10 @@ https://github.com/kashish1928/dsci-310-group-02.git
 and then, in the terminal, navigate to the root of this project.
 
 ### 1. Reproducibly execute the project non-interactively.  
+First you need to pull the docker image from DockerHub
+```
+docker pull kashish1909/dsci-310-group-02:latest
+```
 
 In order to run this type the following command in the terminal :
 ```
@@ -69,21 +73,22 @@ make report
 ## Dependencies  
 
 
-| Package Name | Version |
+|Package Name|Version|
 |--------------|---------|
-| Python | 3.9.10 |
-| R | 4.1.1 |
-| tidyverse | 1.3.1 |
-| tidymodels | 0.1.4 |
-| testthat| 3.1.6 |
-| kknn | 1.3.1 |
-|repr |1.1.4 |
-|ggplot2| 3.3.6 |
-| GGally | 2.1.2 |
-|knitr| 1.38 |
-|devtools| 2.4.5|
+|Python|3.9.10|
+|R|4.1.1|
+|tidyverse|1.3.1|
+|tidymodels|0.1.4|
+|testthat|3.1.6|
+|kknn|1.3.1|
+|repr|1.1.4|
+|ggplot2|3.3.6|
+|GGally |2.1.2|
+|knitr|1.38|
+|devtools|2.4.5|
 |bookdown|0.33|
 |docopt|0.7.1|
 |tinytex|0.44|
+|markdown|1.1|
 ## License Information  
 The software provided in this project is offered under the [MIT](https://opensource.org/license/mit/) open source license and [CC-BY](https://creativecommons.org/about/cclicenses/#:~:text=CC%20BY%3A%20This%20license%20allows,license%20allows%20for%20commercial%20use.). See [LICENSE.md](LICENSE.md) for more information.
