@@ -2,7 +2,7 @@
 # Classifying White Wine Based on Data from Physicochemical Tests  
 ## MEMBERS  
 - Kashish Joshipura  
-- Peter Lee  
+- Peter Lee
 - Eric Huang  
 ## About  
 In this project, we attempt to build a classification model using the k-nearest neighbour algorithm to classify the wine only based on the physicochemical variable. This model can help the wine rating association or connoisseur understand the relationship between physicochemical and sensory factors better and thus determine the rating of the wine more accurately or more objectively.
