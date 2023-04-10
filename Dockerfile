@@ -19,3 +19,4 @@ RUN Rscript -e "remotes::install_version('bookdown','0.33', repos = 'https://cra
 RUN Rscript -e "remotes::install_version('docopt', version = '0.7.1', repos= 'https://cran.r-project.org')"
 RUN Rscript -e "remotes::install_version('tinytex', version = '0.44', repos= 'https://cran.r-project.org')"
 RUN Rscript -e "remotes::install_version('markdown', version = '1.1', repos= 'https://cran.r-project.org')"
+RUN Rscript -e "remotes::install_github('DSCI-310/dsci-310-group-02-pkg', force = TRUE)"
