@@ -10,7 +10,7 @@ Options:
 
 library(tidyverse)
 library(docopt)
-
+library(wineclassify)
 opt <- docopt(doc)
 
 main <- function(input, out_dir){
