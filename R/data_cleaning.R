@@ -29,7 +29,7 @@ main <- function(input, out_dir){
     mutate(
       quality = case_when(
       quality >= 7 ~ "Great",
-      quality >= 5 & quality < 7 ~ "Avergae",
+      quality >= 5 & quality < 7 ~ "Average",
       quality >= 1 & quality < 5 ~ "Unsatisfactory",
       TRUE ~ NA_character_
       )

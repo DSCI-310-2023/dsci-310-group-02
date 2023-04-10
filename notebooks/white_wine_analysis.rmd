@@ -64,6 +64,11 @@ data <- read.csv('../data/raw_data.csv', header = TRUE, ',')
 knitr::kable(head(data), caption = "Data")
 ```
 
+Key Observations :
+- The dataset contains 4898 observations with 12 variables out of which, 11 input variables based on physicochemical tests which affect wine quality and 1 output variable which is the quality of the wine.
+- The input varaibles are:- fixed acidity ($g / dm^3$), volatile acidity ($g / dm^3$), citric acid ($g / dm^3$), residual sugar ($g / dm^3$), chlorides ($g / dm^3$,sulfur dioxide ($mg / dm^3$), total sulfur dioxide ($mg / dm^3$), density ($g / cm^3$), pH, sulphates ($g / dm3$), alcohol (% by volume)
+- Based on sensor data, the variable output is a quality score between 0 and 10. Each wine was evaluated by at least three wine experts, with 0 representing the lowest quality and 10 representing the highest quality.
+
 ## Cleaning the data
 
 Data cleaning was performed as following steps:
@@ -123,7 +128,7 @@ significant and the KNN classification we're about to perform is a non-parametri
 Now we split the data into training and testing,data splitting is
 typically done to avoid overfitting.
 
-Our training data :
+Our training data:
 
 ```{r, echo=FALSE, message=FALSE}
 #training
@@ -145,11 +150,16 @@ We use cross-folding (K-folds cross validation) because it ensures that
 every observation from the original dataset has the chance of appearing
 in training and test set.
 
+In the case of making a 10-fold cross validation for wine quality training data set, the dataset would be divided into 10 folds, with 9 folds used for training and 1 fold used for testing each time. This process is repeated 10 times, so that each fold is used exactly once for testing.
+
+We can ensure that the model is not simply "memorizing" the training data without actually learning to generalize to new examples and obtain a more accurate estimate of the model's performance on new, unseen data by employing this method.
+
 ## Setting up the workflow for the recipe and knn fold
 
 We use a workflow because it can help to ensure that the data is
 properly preprocessed, the model is trained and evaluated using the same
-parameters and metrics
+parameters and metrics.
+By following a well-defined workflow, we can ensure that the data is properly preprocessed, the model is trained and evaluated using the same parameters and metrics, and that the results are reproducible and interpretable.
 
 ## Graphing the accuracy and the KNN
 
@@ -167,6 +177,7 @@ accurate_sd <- 0.00466
 ## Using the most accurate K value to then build our Classification Model
 
 We will then generate a new K-nearest neighbors model using K = 1.
+Using a K value of 1 means that the model will only consider the single nearest neighbor when making predictions. This can be beneficial in cases where the data is highly non-linear or there are complex decision boundaries, as the model will be able to capture fine-grained patterns and relationships in the data.
 
 ## Using the new classification model to build to predict the accuracy and shown through a Confusion Matrix {#sec:conf-mat}
 
