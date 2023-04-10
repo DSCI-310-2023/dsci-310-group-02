@@ -11,6 +11,7 @@ library(docopt)
 library(workflows)
 library(yardstick)
 library(tidyr)
+library(wineclassify)
 set.seed(5678)
 
 opt <- docopt(doc)
