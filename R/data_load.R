@@ -12,6 +12,7 @@ Options:
 library(tidyverse)
 library(docopt)
 library(wineclassify)
+
 opt <- docopt(doc)
 main <- function(url, out_dir) {
   data <- data_load(url, ";")
