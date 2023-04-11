@@ -20,6 +20,7 @@ library(tidyverse)
 library(repr)
 library(tidymodels)
 library(kknn)
+library(wineclassify)
 
 library("ggplot2")                     
 library("GGally")
@@ -115,7 +116,8 @@ it is considered more great than it being unsatisfactory.
 
 ## Looking at the correlation between all predictors and the predicted
 
-```{r ggpairs-plot, echo=FALSE, message=FALSE,fig.cap="Correlation plot of the predictor variables"}
+```{r ggpairs-plot, echo=FALSE, message=FALSE,fig.cap="Correlation plot of the predictor variables", warning=FALSE}
+corr_plot_ <- corr_plot(cleaned_data)
 knitr::include_graphics("../results/ggpairs_plot.png")
 ```
 
