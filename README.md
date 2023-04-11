@@ -53,6 +53,8 @@ To be able to view the analysis file (white_wine_analysis.rmd) in a readable for
 ### 2. Using Make
 Firstly, make sure that you are in the directory containing the [makefile](Makefile) in your terminal
 
+Then install all the packages listed in the dependencies below
+
 Next, run this command if you want the analysis to run from the start
 ```
 make all
@@ -90,5 +92,6 @@ make report
 |docopt|0.7.1|
 |tinytex|0.44|
 |markdown|1.1|
+|wineclassify||
 ## License Information  
 The software provided in this project is offered under the [MIT](https://opensource.org/license/mit/) open source license and [CC-BY](https://creativecommons.org/about/cclicenses/#:~:text=CC%20BY%3A%20This%20license%20allows,license%20allows%20for%20commercial%20use.). See [LICENSE.md](LICENSE.md) for more information.

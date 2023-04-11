@@ -19,16 +19,12 @@ main <- function(test, out_dir){
   # Load the test data
   test_data <- read.csv(test, sep=",")
   test_df <- as.data.frame(test_data)
-  
-  # Load the model and predict
   final_model <- readRDS("./results/final_model.rds")
-  prediction <- predict(final_model, test_df)
-  bind_cols(test_df)
-  test_df$pred <- prediction$.pred_class
-  test_df$quality <- as.factor(test_df$quality)
   
-  # Assess model accuracy
-  conf_matrix <- conf_mat(data = test_df, truth = quality, estimate = pred)
+  # evaluate the model 
+  conf_matrix <- model_results(test_df, final_model, "quality")
+  
+  # save the confusion matrix
   saveRDS(conf_matrix, file = paste0(out_dir, "/final_model_quality.rds"))
 }
 
