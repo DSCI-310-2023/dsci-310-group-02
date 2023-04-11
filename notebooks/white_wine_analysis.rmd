@@ -61,7 +61,7 @@ We first load the required libraries like tidyverse [@tidyverse], knitr
 ## Reading in the white wine dataset from Jupyter
 
 ```{r,echo=FALSE, message=FALSE}
-data <- read.csv('../data/raw_data.csv', header = TRUE, ',')
+data <- data_load("https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/raw_data.csv", ',')
 knitr::kable(head(data), caption = "Data")
 ```
 
@@ -81,7 +81,7 @@ Data cleaning was performed as following steps:
 3.  Set each column as a double expect quality column
 
 ```{r, echo=FALSE, message=FALSE}
-cleaned_data <- read.csv('../data/cleaned_data.csv', header=TRUE, ',')
+cleaned_data <- data_load("https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/cleaned_data.csv",',')
 
 knitr::kable(table(cleaned_data$quality), caption = "Data quality Distribution")
 
@@ -98,7 +98,7 @@ This can help us find any otherwise hidden inconsistencies or trends in the data
 
 
 ```{r, echo=FALSE, message=FALSE}
-data_summary <- read.csv('../results/summary_data.csv', header = TRUE, check.names = FALSE)
+data_summary <- data_load("https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/results/summary_data.csv",",")
 knitr::kable(data_summary, caption = "Data Summary")
 ```
 
@@ -134,10 +134,10 @@ Our training data:
 
 ```{r, echo=FALSE, message=FALSE}
 #training
-training_data <- read.csv('../data/training_data.csv', header = TRUE, ',')
+training_data <- data_load('https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/training_data.csv',',')
 
 # testing data
-testing <- read.csv('../data/test_data.csv', header = TRUE, ',')
+testing <- data_load('https://raw.githubusercontent.com/kashish1928/dsci-310-group-02/main/data/test_data.csv',',')
 
 knitr::kable(head(training_data), caption = "Training data Table")
 ```
