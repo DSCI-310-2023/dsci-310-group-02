@@ -20,6 +20,7 @@ library(tidyverse)
 library(repr)
 library(tidymodels)
 library(kknn)
+library(wineclassify)
 
 library("ggplot2")                     
 library("GGally")
