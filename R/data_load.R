@@ -11,10 +11,11 @@ Options:
 
 library(tidyverse)
 library(docopt)
+library(wineclassify)
 
 opt <- docopt(doc)
 main <- function(url, out_dir) {
-  data <- read_delim(url, ";")
+  data <- data_load(url, ";")
   write_csv(data, paste0(out_dir, "/raw_data.csv"))
 }
 

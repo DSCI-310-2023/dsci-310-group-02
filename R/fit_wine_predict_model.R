@@ -13,6 +13,7 @@ library(tidyverse)
 library(tidymodels)
 library(kknn)
 library(docopt)
+library(wineclassify)
 set.seed(5678)
 
 opt <- docopt(doc)
@@ -25,35 +26,10 @@ main <- function(train, out_dir){
     step_center(all_predictors()) %>%
     step_scale(all_predictors())
 
-  vfold <- vfold_cv(train_df, v = 10, strata = quality)
-  knn_tune <- nearest_neighbor(weight_func = "rectangular", neighbors = tune()) %>%
-    set_engine("kknn") %>%
-    set_mode("classification")
+  # build the model
+  final_model <- model_build(train_df, recipe, "quality")
   
-  # Set up the workflow for the knn fold
-  knn_results <- workflow() %>%
-    add_recipe(recipe) %>%
-    add_model(knn_tune) %>%
-    tune_grid(resamples = vfold, grid = 20) %>%
-    collect_metrics()
-
-  # Find the most accurate K value
-  accuracies <- knn_results %>% 
-    filter(.metric == "accuracy")
-
-  accurate_k <- accuracies %>% filter(mean == max(mean)) %>% slice(1)
-  k <- accurate_k %>% pull(neighbors)
-  
-  # Use the most accurate K value to then build our Classification Model
-  spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k) %>%
-    set_engine("kknn") %>%
-    set_mode("classification")
-
-  final_model <- workflow() %>%
-    add_recipe(recipe) %>%
-    add_model(spec) %>%
-    fit(train_df)
-  
+  # save the fitted model
   saveRDS(final_model, file = paste0(out_dir, "/final_model.rds"))
 }
 
