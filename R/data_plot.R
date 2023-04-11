@@ -13,7 +13,7 @@ library(dplyr)
 library(ggplot2)
 library(GGally)
 library(docopt)
-
+library(wineclassify)
 opt <- docopt(doc)
 
 # loading the dataset ----------------------------------------------------------
