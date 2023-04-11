@@ -53,6 +53,8 @@ To be able to view the analysis file (white_wine_analysis.rmd) in a readable for
 ### 2. Using Make
 Firstly, make sure that you are in the directory containing the [makefile](Makefile) in your terminal
 
+Then install all the packages listed in the dependencies below
+
 Next, run this command if you want the analysis to run from the start
 ```
 make all
